@@ -33,11 +33,11 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-maven-
       - name: List root directory
-        run: ls -la
+        run: ls -la ./server
       # Step 4: Build the project (specify project directory)
       - name: Build with Maven
         run: mvn clean install
-        working-directory: server/registry  # Specify the project directory
+        working-directory: ./server/registry # Specify the project directory
 
       # # Step 5: Run tests (specify project directory)
       # - name: Run tests
