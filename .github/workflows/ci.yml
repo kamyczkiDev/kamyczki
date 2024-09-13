@@ -12,5 +12,5 @@ jobs:
       - name: List files in the working directory
         run: ls -la /home/runner/work/Kamyczki
       - name: Run the Maven verify phase
-        working-directory: ./server/registry
+        working-directory: server/registry
         run: mvn --batch-mode --update-snapshots verify
