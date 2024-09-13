@@ -6,9 +6,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
-      with:
-        java-version: '19'
-        distribution: 'temurin'
+        with: 
+          java-version: '19'
+          distribution: 'temurin'
       - name: Run the Maven verify phase
-      run: cd ./server/registry
-      run: mvn --batch-mode --update-snapshots verify
+        run: |
+          cd ./server/registry
+          mvn --batch-mode --update-snapshots verify
