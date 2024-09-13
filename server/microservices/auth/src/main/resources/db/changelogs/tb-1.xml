@@ -1,0 +1,14 @@
+<databaseChangeLog>
+    <changeSet id="create_table_users" author="durskan">
+        <createTable tableName="USER">
+            <column name="id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="USER_ID_PK"/>
+            </column>
+            <column name="NAME" type="varchar(50)"/>
+            <column name="SURNAME" type="varchar(50)"/>
+            <column name="USERNAME" type="varchar(50)"/>
+            <column name="PASSWORD" type="varchar(100)"/>
+            <column name="ROLE" type="varchar(10)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
