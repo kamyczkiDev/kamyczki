@@ -10,4 +10,5 @@ jobs:
         with:
           command: run
           jenkinsfile: Jenkinsfile
+          pluginstxt: ./plugins.txt
           jcasc: jcasc.yml
