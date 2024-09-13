@@ -9,8 +9,8 @@ jobs:
         with: 
           java-version: '19'
           distribution: 'temurin'
-      - name: Check if the directory exists
-        run: ls -la /home/runner/work/Kamyczki/server/registry
+      - name: List files in the working directory
+        run: ls -la /home/runner/work/Kamyczki
       - name: Run the Maven verify phase
-        working-directory: /home/runner/work/Kamyczki/server/registry
+        working-directory: ./server/registry
         run: mvn --batch-mode --update-snapshots verify
