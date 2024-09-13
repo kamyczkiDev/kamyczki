@@ -1,12 +1,15 @@
-name: Java CI
+name: CI
 on: [push]
 jobs:
-  jenkins-static-image-pipeline:
+  jfr-container-action-pipeline:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/jenkinsci/jenkinsfile-runner:master
     steps:
       - uses: actions/checkout@v2
-      - uses:
-          jenkinsci/jfr-static-image-action@master
+      - name: Jenkins pipeline in the container
+        uses:
+          jenkinsci/jfr-container-action@master
         with:
           command: run
           jenkinsfile: Jenkinsfile
