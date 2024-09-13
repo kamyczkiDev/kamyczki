@@ -10,6 +10,4 @@ jobs:
           java-version: '19'
           distribution: 'temurin'
       - name: Run the Maven verify phase
-        run: |
-          cd server/registry
-          mvn --batch-mode --update-snapshots verify
+        run: mvn --batch-mode --update-snapshots verify
