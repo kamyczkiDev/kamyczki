@@ -11,5 +11,5 @@ jobs:
           distribution: 'temurin'
       - name: Run the Maven verify phase
         run: |
-          cd ./server/registry
+          cd server/registry
           mvn --batch-mode --update-snapshots verify
