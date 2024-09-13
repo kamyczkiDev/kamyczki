@@ -1,17 +1,25 @@
 name: CI
 on: [push]
 jobs:
-  jfr-container-action-pipeline:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/jenkinsci/jenkinsfile-runner:master
+  jfr-runtime-action-pipeline:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macOS-latest, windows-latest ]
+    runs-on: ${{matrix.os}}
+    name: jfr-runtime-action-pipeline
     steps:
       - uses: actions/checkout@v2
-      - name: Jenkins pipeline in the container
+      - name : Setup Jenkins
         uses:
-          jenkinsci/jfr-container-action@master
+          jenkinsci/jfr-runtime-action@master
+      - name: Jenkins plugins download
+        uses:
+          jenkinsci/jfr-plugin-installation-action@master
+        with:
+          pluginstxt: plugins.txt
+      - name: Run Jenkins pipeline
+        uses:
+          jenkinsci/jfr-runtime-action@master
         with:
           command: run
           jenkinsfile: Jenkinsfile
-          pluginstxt: plugins.txt
-          jcasc: jcasc.yml
