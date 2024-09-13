@@ -10,5 +10,5 @@ jobs:
           java-version: '19'
           distribution: 'temurin'
       - name: Run the Maven verify phase
-        working-directory: server/registry
+        working-directory: ./server/registry
         run: mvn --batch-mode --update-snapshots verify
