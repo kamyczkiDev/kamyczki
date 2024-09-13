@@ -1,25 +1,14 @@
-name: CI
+name: Java CI
 on: [push]
 jobs:
-  jfr-runtime-action-pipeline:
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, macOS-latest, windows-latest ]
-    runs-on: ${{matrix.os}}
-    name: jfr-runtime-action-pipeline
+  jenkins-container-pipeline:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name : Setup Jenkins
-        uses:
-          jenkinsci/jfr-runtime-action@master
-      - name: Jenkins plugins download
-        uses:
-          jenkinsci/jfr-plugin-installation-action@master
-        with:
-          pluginstxt: plugins.txt
-      - name: Run Jenkins pipeline
-        uses:
-          jenkinsci/jfr-runtime-action@master
-        with:
-          command: run
-          jenkinsfile: Jenkinsfile
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+    with:
+      java-version: '19'
+      distribution: 'temurin'
+      - name: Run the Maven verify phase
+      run: cd ./server/registry
+      run: mvn --batch-mode --update-snapshots verify
