@@ -32,7 +32,8 @@ jobs:
       #     key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
       #     restore-keys: |
       #       ${{ runner.os }}-maven-
-
+      - name: List root directory
+        run: ls -la
       # Step 4: Build the project (specify project directory)
       - name: Build with Maven
         run: mvn clean install
