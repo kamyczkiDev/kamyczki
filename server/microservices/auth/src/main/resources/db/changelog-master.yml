@@ -1,4 +1,4 @@
-databaseChangelog:
+databaseChangeLog:
   - include:
-      file: ./changelogs/20231229_2216_create_table_user.yml
-      relativeToChangeLogFile: true
+      file: ./changelogs/tb-1.xml
+      relativeToChangelogFile: true

@@ -1,15 +1,17 @@
 package com.kamyczki.auth.authentication;
 
+import com.kamyczki.auth.authentication.dto.SignInDto;
+import com.kamyczki.auth.authentication.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@SuppressWarnings("unused")@RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class AuthenticationController {
+class AuthenticationController {
 
     private final AuthenticationService service;
 

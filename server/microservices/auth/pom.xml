@@ -22,6 +22,12 @@
 		<spring.data.jpa.version>3.1.2</spring.data.jpa.version>
 		<springframework.spring-jdbc.version>6.1.12</springframework.spring-jdbc.version>
 	<mapstruct.version>1.5.3.Final</mapstruct.version>
+		<spring-data-jdbc.version>3.3.3</spring-data-jdbc.version>
+		<postgresql.verion>42.7.4</postgresql.verion>
+		<spring-boot-starter-security.version>3.3.3</spring-boot-starter-security.version>
+		<spring-security-core.version>6.3.3</spring-security-core.version>
+		<hibernate-core.version>6.1.7.Final</hibernate-core.version>
+		<lombok-mapstruct-binging.version>0.2.0</lombok-mapstruct-binging.version>
 	</properties>
 
 	<dependencies>
@@ -40,6 +46,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+			<version>${spring-boot-starter-security.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring-security-core.version}</version>
 		</dependency>
 
 		<dependency>
@@ -47,11 +60,11 @@
 			<artifactId>spring-jdbc</artifactId>
 			<version>${springframework.spring-jdbc.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jdbc -->
+
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jdbc</artifactId>
-			<version>3.3.3</version>
+			<version>${spring-data-jdbc.version}</version>
 		</dependency>
 
 
@@ -68,7 +81,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.7.4</version>
+			<version>${postgresql.verion}</version>
 		</dependency>
 
 		<dependency>
@@ -84,6 +97,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok-mapstruct-binding</artifactId>
+			<version>${lombok-mapstruct-binging.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>${io.jsonwebtoken.version}</version>
@@ -92,7 +111,12 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>6.1.7.Final</version>
+			<version>${hibernate-core.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
 		</dependency>
 
 	</dependencies>
@@ -100,9 +124,30 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version>
+				<configuration>
+					<annotationProcessorPaths combine.children="append">
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${mapstruct.version}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>${lombok-mapstruct-binging.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 

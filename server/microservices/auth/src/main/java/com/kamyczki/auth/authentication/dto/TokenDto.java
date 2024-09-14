@@ -1,4 +1,4 @@
-package com.kamyczki.auth.authentication;
+package com.kamyczki.auth.authentication.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignInDto {
+public class TokenDto {
 
-    private String username;
-    private String password;
+    private String token;
 }

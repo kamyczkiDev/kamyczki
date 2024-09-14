@@ -1,4 +1,4 @@
-package com.kamyczki.auth.user;
+package com.kamyczki.auth.user.type;
 
 public enum Role {
 
