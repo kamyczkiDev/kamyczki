@@ -4,5 +4,5 @@ import com.kamyczki.auth.user.dto.UserDetailsDto;
 
 public interface UserFacade {
 
-   UserDetailsDto getUserDetails(String username);
+    UserDetailsDto getUserDetails(String username);
 }

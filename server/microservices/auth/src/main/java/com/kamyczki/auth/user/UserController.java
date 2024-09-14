@@ -18,7 +18,7 @@ class UserController {
     private final UserService userService;
 
     @PostMapping("register")
-    UserDto register(@RequestBody @Valid RegisterUserDto registerUserDto){
+    UserDto register(@RequestBody @Valid RegisterUserDto registerUserDto) {
         return userService.registerUser(registerUserDto);
     }
 }

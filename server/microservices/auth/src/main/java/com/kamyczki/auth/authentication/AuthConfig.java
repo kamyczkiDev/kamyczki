@@ -16,11 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 class AuthConfig {
 
-    private final UserFacade repository;
+    private final UserFacade userFacade;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return repository::getUserDetails;
+        return userFacade::getUserDetails;
     }
 
     @Bean
