@@ -2,5 +2,16 @@ spring:
   application:
     name: auth
 
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/postgres
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:/db/changelog-master.yml
+
 server:
   port: 8081
+
+jwt:
+  secret: kamyczki-secret-key
