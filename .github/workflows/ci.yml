@@ -13,33 +13,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the repository
       - name: Check out the repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up JDK 17
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      # # Step 3: Cache Maven dependencies (optional)
-      # - name: Cache Maven dependencies
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: ~/.m2/repository
-      #     key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-maven-
-      - name: List root directory
-        run: ls -la ./server
-      # Step 4: Build the project (specify project directory)
-      - name: Build with Maven
-        run: mvn clean install
-        working-directory: ./server/microservices/registry # Specify the project directory
+      - name: Build and test registry service
+        run: |
+          mvn clean install
+          mvn test
+        working-directory: ./server/microservices/registry
 
-      # # Step 5: Run tests (specify project directory)
-      # - name: Run tests
-      #   run: mvn test
-      #   working-directory: ./my-java-app  # Specify the project directory
+      - name: Build and test auth service
+        run: |
+          mvn clean install
+          mvn test
+        working-directory: ./server/microservices/auth
+
+      - name: Build and test gateway service
+        run: |
+          mvn clean install
+          mvn test
+        working-directory: ./server/microservices/gateway
