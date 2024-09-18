@@ -1,0 +1,41 @@
+name: Java CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build and test registry service
+        run: |
+          mvn clean install
+          mvn test
+        working-directory: ./server/microservices/registry
+
+      - name: Build and test auth service
+        run: |
+          mvn clean install
+          mvn test
+        working-directory: ./server/microservices/auth
+
+      - name: Build and test gateway service
+        run: |
+          mvn clean install
+          mvn test
+        working-directory: ./server/microservices/gateway
