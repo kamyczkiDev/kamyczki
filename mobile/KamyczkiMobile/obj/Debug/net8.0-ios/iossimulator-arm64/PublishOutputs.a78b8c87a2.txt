@@ -49,6 +49,9 @@
 /Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/bin/Debug/net8.0-ios/iossimulator-arm64/publish/../KamyczkiMobile.app/Microsoft.Maui.dll
 /Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/bin/Debug/net8.0-ios/iossimulator-arm64/publish/../KamyczkiMobile.app/Microsoft.Maui.Essentials.dll
 /Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/bin/Debug/net8.0-ios/iossimulator-arm64/publish/../KamyczkiMobile.app/Microsoft.Maui.Graphics.dll
+/Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/bin/Debug/net8.0-ios/iossimulator-arm64/publish/../KamyczkiMobile.app/Microsoft.Maui.Controls.HotReload.Forms.dll
+/Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/bin/Debug/net8.0-ios/iossimulator-arm64/publish/../KamyczkiMobile.app/Microsoft.VisualStudio.DesignTools.MobileTapContracts.dll
+/Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/bin/Debug/net8.0-ios/iossimulator-arm64/publish/../KamyczkiMobile.app/Microsoft.VisualStudio.DesignTools.TapContract.dll
 /Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/bin/Debug/net8.0-ios/iossimulator-arm64/publish/../KamyczkiMobile.app/KamyczkiMobile.dll
 /Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/bin/Debug/net8.0-ios/iossimulator-arm64/publish/../KamyczkiMobile.app/Microsoft.CSharp.dll
 /Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/bin/Debug/net8.0-ios/iossimulator-arm64/publish/../KamyczkiMobile.app/Microsoft.VisualBasic.Core.dll

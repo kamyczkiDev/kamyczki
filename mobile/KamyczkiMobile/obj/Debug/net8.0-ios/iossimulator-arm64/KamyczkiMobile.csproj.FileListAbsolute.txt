@@ -312,3 +312,6 @@
 /Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/obj/Debug/net8.0-ios/iossimulator-arm64/KamyczkiMobile.pdb
 /Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/obj/Debug/net8.0-ios/iossimulator-arm64/KamyczkiMobile.genruntimeconfig.cache
 /Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/obj/Debug/net8.0-ios/iossimulator-arm64/ref/KamyczkiMobile.dll
+/Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/bin/Debug/net8.0-ios/iossimulator-arm64/Microsoft.Maui.Controls.HotReload.Forms.dll
+/Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/bin/Debug/net8.0-ios/iossimulator-arm64/Microsoft.VisualStudio.DesignTools.MobileTapContracts.dll
+/Users/mateusz/Documents/Projects/Kamyczki/mobile/KamyczkiMobile/bin/Debug/net8.0-ios/iossimulator-arm64/Microsoft.VisualStudio.DesignTools.TapContract.dll
