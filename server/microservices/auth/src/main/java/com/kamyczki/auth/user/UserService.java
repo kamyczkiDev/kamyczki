@@ -1,15 +1,15 @@
 package com.kamyczki.auth.user;
 
-import com.kamyczki.auth.shared.ErrorException;
 import com.kamyczki.auth.user.dto.RegisterUserDto;
 import com.kamyczki.auth.user.dto.UserDetailsDto;
 import com.kamyczki.auth.user.dto.UserDto;
+import com.kamyczki.commons.error.ErrorException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ class UserService implements UserFacade {
     public UserDetailsDto getUserDetails(String username) {
         return userRepository.findByUsername(username)
                 .map(userMapper::toUserDetails)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new ErrorException( "USER_NOT_FOUND","Username could not be found", NOT_FOUND));
     }
 
     UserDto registerUser(RegisterUserDto registerUserDto) {
@@ -41,13 +41,13 @@ class UserService implements UserFacade {
     //todo consider creating web binder validators?
     private void verifyEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new ErrorException(BAD_REQUEST, "User with this email already exists");
+            throw new ErrorException("USER_ALREADY_EXISTS", "User with this email already exists", BAD_REQUEST);
         }
     }
 
     private void verifyUsername(String username) {
         if (userRepository.existsByUsername(username)) {
-            throw new ErrorException(BAD_REQUEST, "User with this email already exists");
+            throw new ErrorException("USER_ALREADY_EXISTS", "User with this username already exists", BAD_REQUEST);
         }
     }
 }

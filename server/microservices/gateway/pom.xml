@@ -23,6 +23,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.kamyczki</groupId>
+			<artifactId>commons-error</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-gateway</artifactId>
 			<version>${spring-cloud-starter-gateway.version}</version>
@@ -32,6 +38,12 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 			<version>${spring-cloud-starter-netflix-eureka-client.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+			<version>1.4.7.RELEASE</version>
 		</dependency>
 	</dependencies>
 
