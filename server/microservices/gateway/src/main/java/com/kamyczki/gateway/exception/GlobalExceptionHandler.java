@@ -1,6 +1,7 @@
 package com.kamyczki.gateway.exception;
 
 import com.kamyczki.commons.error.ErrorException;
+import com.kamyczki.commons.error.RestError;
 import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.context.request.WebRequest;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -37,8 +39,10 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(ErrorException.class)
-    public ResponseEntity<ErrorException> handleErrorException(ErrorException ex) {
-        return new ResponseEntity<>(ex, ex.getStatusCode());
+    public ResponseEntity<RestError> handleErrorException(ErrorException ex, WebRequest request) {
+        // Build a response entity with the status code and error message
+        RestError errorResponse = new RestError(ex.getCode(), ex.getMessage(), null);
+        return new ResponseEntity<>(errorResponse, ex.getStatusCode());
     }
 
     @ExceptionHandler(Exception.class)

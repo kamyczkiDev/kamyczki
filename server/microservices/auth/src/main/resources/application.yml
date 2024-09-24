@@ -14,5 +14,5 @@ server:
   port: 8081
 
 jwt:
-  secret: kamyczki-secret-key
+  secret: kamyczkisecretkeyanditissosecureyouwillnotbelive
 

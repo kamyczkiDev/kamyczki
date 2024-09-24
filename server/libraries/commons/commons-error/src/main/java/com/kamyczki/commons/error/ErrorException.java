@@ -14,12 +14,22 @@ public class ErrorException extends ResponseStatusException {
     private final String code;
     private final String message;
     private final HttpStatusCode statusCode;
+    private final String field;
 
     public ErrorException(String code, String message, HttpStatusCode status) {
         super(status);
         this.statusCode = status;
         this.message = message;
         this.code = code;
+        this. field = null;
+    }
+
+    public ErrorException(String code, String message,String field, HttpStatusCode status) {
+        super(status);
+        this.statusCode = status;
+        this.message = message;
+        this.code = code;
+        this. field = field;
     }
 
 }

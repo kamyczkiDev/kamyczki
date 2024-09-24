@@ -8,8 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static com.kamyczki.commons.error.ErrorCodes.RESOURCE_ALREADY_EXISTS;
+import static com.kamyczki.commons.error.ErrorCodes.RESOURCE_NOT_FOUND;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 
 @Service
 @RequiredArgsConstructor
@@ -22,9 +24,13 @@ class UserService implements UserFacade {
 
     @Override
     public UserDetailsDto getUserDetails(String username) {
-        return userRepository.findByUsername(username)
-                .map(userMapper::toUserDetails)
-                .orElseThrow(() -> new ErrorException( "USER_NOT_FOUND","Username could not be found", NOT_FOUND));
+        var optional  = userRepository.findByUsername(username);
+                if(optional.isEmpty())
+                {
+                    RESOURCE_NOT_FOUND.throwWithObjectAndField("User","username");
+                }
+
+                return userMapper.toUserDetails(optional.get());
     }
 
     UserDto registerUser(RegisterUserDto registerUserDto) {
@@ -41,13 +47,13 @@ class UserService implements UserFacade {
     //todo consider creating web binder validators?
     private void verifyEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new ErrorException("USER_ALREADY_EXISTS", "User with this email already exists", BAD_REQUEST);
+            RESOURCE_ALREADY_EXISTS.throwWithObjectAndField("User", "email");
         }
     }
 
     private void verifyUsername(String username) {
         if (userRepository.existsByUsername(username)) {
-            throw new ErrorException("USER_ALREADY_EXISTS", "User with this username already exists", BAD_REQUEST);
+             RESOURCE_ALREADY_EXISTS.throwWithObjectAndField("User", "username");
         }
     }
 }
