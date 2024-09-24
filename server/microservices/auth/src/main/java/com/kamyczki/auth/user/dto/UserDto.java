@@ -1,11 +1,13 @@
 package com.kamyczki.auth.user.dto;
 
 import com.kamyczki.auth.user.type.Role;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Getter
+@Builder
+@RequiredArgsConstructor
 public class UserDto {
 
     private final long id;

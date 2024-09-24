@@ -3,14 +3,12 @@ package com.kamyczki.auth.user;
 import com.kamyczki.auth.user.dto.RegisterUserDto;
 import com.kamyczki.auth.user.dto.UserDetailsDto;
 import com.kamyczki.auth.user.dto.UserDto;
-import com.kamyczki.commons.error.ErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.kamyczki.commons.error.ErrorCodes.RESOURCE_ALREADY_EXISTS;
 import static com.kamyczki.commons.error.ErrorCodes.RESOURCE_NOT_FOUND;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 
 @Service
@@ -18,19 +16,18 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 class UserService implements UserFacade {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
 
     @Override
     public UserDetailsDto getUserDetails(String username) {
-        var optional  = userRepository.findByUsername(username);
-                if(optional.isEmpty())
-                {
-                    RESOURCE_NOT_FOUND.throwWithObjectAndField("User","username");
-                }
+        var optional = userRepository.findByUsername(username);
+        if (optional.isEmpty()) {
+            RESOURCE_NOT_FOUND.throwWithObjectAndFieldAndValue("User", "username", username);
+        }
 
-                return userMapper.toUserDetails(optional.get());
+        return userMapper.toUserDetails(optional.get());
     }
 
     UserDto registerUser(RegisterUserDto registerUserDto) {
@@ -53,7 +50,7 @@ class UserService implements UserFacade {
 
     private void verifyUsername(String username) {
         if (userRepository.existsByUsername(username)) {
-             RESOURCE_ALREADY_EXISTS.throwWithObjectAndField("User", "username");
+            RESOURCE_ALREADY_EXISTS.throwWithObjectAndField("User", "username");
         }
     }
 }

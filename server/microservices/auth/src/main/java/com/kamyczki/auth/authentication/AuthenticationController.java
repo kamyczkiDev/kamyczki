@@ -18,7 +18,7 @@ class AuthenticationController {
     private final AuthenticationService service;
 
     @PostMapping("sign-in")
-    public TokenDto authenticate(@RequestBody @Valid SignInDto signInDto) {
+    TokenDto authenticate(@RequestBody @Valid SignInDto signInDto) {
         return service.authenticate(signInDto);
     }
 }

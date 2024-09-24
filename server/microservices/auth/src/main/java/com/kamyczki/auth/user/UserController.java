@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SuppressWarnings("unused")
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("api/user")
 @RequiredArgsConstructor
 class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/register")
+    @PostMapping("register")
     UserDto register(@RequestBody @Valid RegisterUserDto registerUserDto) {
         return userService.registerUser(registerUserDto);
     }

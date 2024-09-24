@@ -1,6 +1,7 @@
 package com.kamyczki.auth.user.dto;
 
 import com.kamyczki.auth.user.type.Role;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +14,7 @@ import java.util.List;
 import static org.hibernate.cfg.AvailableSettings.USER;
 
 @Getter
+@Builder
 @RequiredArgsConstructor
 public class UserDetailsDto implements UserDetails {
 

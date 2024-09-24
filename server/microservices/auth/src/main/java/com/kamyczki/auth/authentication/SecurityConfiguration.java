@@ -36,7 +36,6 @@ class SecurityConfiguration implements WebMvcConfigurer {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/sign-in").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/test").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
