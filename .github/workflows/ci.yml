@@ -22,6 +22,12 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Install commons
+        run: |
+          mvn clean install
+          mvn test
+        working-directory: ./server/libraries/commons
+
       - name: Build and test registry service
         run: |
           mvn clean install
