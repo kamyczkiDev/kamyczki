@@ -1,30 +1,33 @@
 package com.kamyczki.auth.user;
 
-import com.kamyczki.auth.shared.ErrorException;
 import com.kamyczki.auth.user.dto.RegisterUserDto;
 import com.kamyczki.auth.user.dto.UserDetailsDto;
 import com.kamyczki.auth.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static com.kamyczki.commons.error.ErrorCodes.RESOURCE_ALREADY_EXISTS;
+import static com.kamyczki.commons.error.ErrorCodes.RESOURCE_NOT_FOUND;
+
 
 @Service
 @RequiredArgsConstructor
 class UserService implements UserFacade {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
 
     @Override
     public UserDetailsDto getUserDetails(String username) {
-        return userRepository.findByUsername(username)
-                .map(userMapper::toUserDetails)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        var optional = userRepository.findByUsername(username);
+        if (optional.isEmpty()) {
+            RESOURCE_NOT_FOUND.throwWithObjectAndFieldAndValue("User", "username", username);
+        }
+
+        return userMapper.toUserDetails(optional.get());
     }
 
     UserDto registerUser(RegisterUserDto registerUserDto) {
@@ -41,13 +44,13 @@ class UserService implements UserFacade {
     //todo consider creating web binder validators?
     private void verifyEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new ErrorException(BAD_REQUEST, "User with this email already exists");
+            RESOURCE_ALREADY_EXISTS.throwWithObjectAndField("User", "email");
         }
     }
 
     private void verifyUsername(String username) {
         if (userRepository.existsByUsername(username)) {
-            throw new ErrorException(BAD_REQUEST, "User with this email already exists");
+            RESOURCE_ALREADY_EXISTS.throwWithObjectAndField("User", "username");
         }
     }
 }

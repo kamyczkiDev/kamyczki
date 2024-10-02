@@ -18,7 +18,7 @@ interface UserMapper {
 
     UserDetailsDto toUserDetails(User user);
 
-    default Role getRoleUser() {
+    default Role getRoleUser(){
         return Role.USER;
     }
 }
