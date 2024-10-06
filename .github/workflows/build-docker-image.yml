@@ -67,7 +67,7 @@ jobs:
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: ./server
-          file: ./server/microservices/registry/Dockerfile
+          file: ./server/microservices/registry/DockeArfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -81,6 +81,7 @@ jobs:
           subject-digest: ${{ steps.push_auth.outputs.digest }}
           push-to-registry: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:auth
+          platforms: linux/amd64,linux/arm64
 
       - name: Generate artifact attestation for gateway
         uses: actions/attest-build-provenance@v1
@@ -89,6 +90,7 @@ jobs:
           subject-digest: ${{ steps.push_gateway.outputs.digest }}
           push-to-registry: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:gateway
+          platforms: linux/amd64,linux/arm64
 
       - name: Generate artifact attestation for registry
         uses: actions/attest-build-provenance@v1
@@ -97,4 +99,5 @@ jobs:
           subject-digest: ${{ steps.push_registry.outputs.digest }}
           push-to-registry: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:registry
+          platforms: linux/amd64,linux/arm64
       
