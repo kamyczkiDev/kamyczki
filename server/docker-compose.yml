@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  registry:
+    container_name: eureka_registry
+    image: registry:latest
+    ports:
+      - '8761:8761'
+    networks:
+      - auth-network
+  gateway:
+    container_name: gateway
+    image: gateway:latest
+    ports:
+      - '8080:8080'
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka/
+    networks:
+      - auth-network
+
+
+  db:
+    container_name: auth_db
+    image: postgres:14.1-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - auth-network
+
+  auth_app:
+    container_name: auth_app
+    image: auth:latest
+    depends_on:
+      - db
+      - registry
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka/
+    ports:
+      - '8081:8081'
+    networks:
+      - auth-network
+
+networks:
+  auth-network:
+    driver: bridge
+
+volumes:
+  db:
+    driver: local
