@@ -77,21 +77,24 @@ jobs:
       - name: Generate artifact attestation for auth
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:auth
           subject-digest: ${{ steps.push_auth.outputs.digest }}
           push-to-registry: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:auth
 
       - name: Generate artifact attestation for gateway
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:gateway
           subject-digest: ${{ steps.push_gateway.outputs.digest }}
           push-to-registry: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:gateway
 
       - name: Generate artifact attestation for registry
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:registry
           subject-digest: ${{ steps.push_registry.outputs.digest }}
           push-to-registry: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:registry
       
