@@ -36,20 +36,21 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       # Budowanie i publikowanie obrazu na podstawie platformy z matrix
       - name: Build and push Docker image for ${{ matrix.platform }}
         id: push_image
+        run: echo "${{ steps.meta.outputs.tags }} CHUUUUUUUUUUUUJ CHUJCHUJCHUJ"
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: ./server
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
-          tags:  ${{ steps.docker-metadata.outputs.tags }}
-          labels:  ${{ steps.docker-metadata.outputs.tags }}
+          tags: ${{ matrix.platform }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Generate artifact attestation for ${{ matrix.platform }}
         uses: actions/attest-build-provenance@v1
