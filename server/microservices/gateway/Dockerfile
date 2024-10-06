@@ -1,4 +1,6 @@
 FROM eclipse-temurin:21-jdk-jammy AS builder
+
+LABEL org.opencontainers.image.description DESCRIPTION
 # Ustawiamy katalog roboczy wewnątrz kontenera
 WORKDIR /app
 
