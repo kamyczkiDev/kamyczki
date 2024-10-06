@@ -40,9 +40,6 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: print tags
-        run: echo "${{ steps.meta.outputs.tags }} CHUUUUUUUUUUUUJ CHUJCHUJCHUJ"
-
       # Budowanie i publikowanie obrazu na podstawie platformy z matrix
       - name: Build and push Docker image for ${{ matrix.platform }}
         id: push_image
@@ -51,7 +48,7 @@ jobs:
           context: ./server
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
-          tags: ${{ matrix.platform }}
+          tags: ${{ steps.meta.outputs.tags.platforms }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Generate artifact attestation for ${{ matrix.platform }}
