@@ -41,6 +41,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
+      - name: print
+        run: echo "${{ tags }}"
+
       # Budowanie i publikowanie obrazu na podstawie platformy z matrix
       - name: Build and push Docker image for ${{ matrix.platform }}
         id: push_image
