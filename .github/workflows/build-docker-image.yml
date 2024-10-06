@@ -56,6 +56,6 @@ jobs:
       - name: Generate artifact attestation for ${{ matrix.platform }}
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }}
+          subject-name: ghcr.io/isaribi/kamyczki:${{ matrix.platform }}
           subject-digest: ${{ steps.push_image.outputs.digest }}
           push-to-registry: true
