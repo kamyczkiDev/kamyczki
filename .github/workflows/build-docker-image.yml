@@ -5,7 +5,7 @@ name: Create and publish a Docker image
 on:
   push:
     branches:
-      - main
+      - DanielWorkflow
 
 # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
@@ -74,10 +74,24 @@ jobs:
       
       
       # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see "[AUTOTITLE](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds)." 
-      - name: Generate artifact attestation
+      - name: Generate artifact attestation for auth
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
-          subject-digest: ${{ steps.push.outputs.digest }}
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:auth
+          subject-digest: ${{ steps.push_auth.outputs.digest }}
+          push-to-registry: true
+
+      - name: Generate artifact attestation for gateway
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:gateway
+          subject-digest: ${{ steps.push_gateway.outputs.digest }}
+          push-to-registry: true
+
+      - name: Generate artifact attestation for registry
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:registry
+          subject-digest: ${{ steps.push_registry.outputs.digest }}
           push-to-registry: true
       
