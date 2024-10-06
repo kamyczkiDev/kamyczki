@@ -8,6 +8,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  SERVICE_PATH: microservices/${{ matrix.service }}
 
 jobs:
   build-and-push-images:
@@ -47,16 +48,11 @@ jobs:
         with:
           version: v0.7.0
 
-      - name: Build and push Docker image
-        id: push
-        uses: docker/build-push-action@v4
-        with:
-          no-cache: true
-          context: ./server
-          file: ./microservices/${{ matrix.service }}/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+      - name: Build Docker image
+        run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}_${{ matrix.service }}:${{ github.sha }} ${{ env.SERVICE_PATH }}
+
+      - name: Push Docker image
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}_${{ matrix.service }}:${{ github.sha }}
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
