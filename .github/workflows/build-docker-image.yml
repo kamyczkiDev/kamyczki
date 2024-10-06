@@ -4,20 +4,18 @@ on:
   push:
     branches:
       - DanielWorkflow
-    tags: [ "gateway", "auth", "registry" ]
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  PLATFORMS: gateway,auth,registry  # Definiuje platformy
+  PLATFORMS: gateway,auth,registry
 
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [gateway, auth, registry]  # Użycie matrix do zdefiniowania platform
-
+        platform: [gateway, auth, registry]
     permissions:
       contents: read
       packages: write
@@ -44,7 +42,6 @@ jobs:
       - name: print
         run: echo "${{ steps.meta.outputs.tags }}"
 
-      # Budowanie i publikowanie obrazu na podstawie platformy z matrix
       - name: Build and push Docker image for ${{ matrix.platform }}
         id: push_image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
@@ -52,7 +49,7 @@ jobs:
           context: ./server
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: isaribi/kamyczki:${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Generate artifact attestation for ${{ matrix.platform }}
