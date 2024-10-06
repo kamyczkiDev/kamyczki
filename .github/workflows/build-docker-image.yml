@@ -48,12 +48,13 @@ jobs:
           context: ./server
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags || 'latest' }}
           labels: ${{ steps.meta.outputs.labels }}
+          run: docker images
 
       - name: Generate artifact attestation for ${{ matrix.platform }}
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }}
           subject-digest: ${{ steps.push_image.outputs.digest }}
           push-to-registry: true
