@@ -23,7 +23,7 @@
 		<springframework.spring-jdbc.version>6.1.12</springframework.spring-jdbc.version>
 		<mapstruct.version>1.5.3.Final</mapstruct.version>
 		<spring-data-jdbc.version>3.3.3</spring-data-jdbc.version>
-		<postgresql.verion>42.7.4</postgresql.verion>
+		<postgresql.version>42.7.4</postgresql.version>
 		<spring-boot-starter-security.version>3.3.3</spring-boot-starter-security.version>
 		<spring-security-core.version>6.3.3</spring-security-core.version>
 		<hibernate-core.version>6.1.7.Final</hibernate-core.version>
@@ -96,7 +96,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>${postgresql.verion}</version>
+			<version>${postgresql.version}</version>
 		</dependency>
 
 		<dependency>
@@ -109,6 +109,13 @@
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>${mapstruct.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>${mapstruct.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -136,8 +143,24 @@
 
 	</dependencies>
 
-	<build>
+		<build>
 		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.3.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>com.kamyczki.auth.AuthApplication</mainClass>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -162,9 +185,9 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
+
 
 	<url/>
 	<licenses>

@@ -3,18 +3,19 @@ FROM eclipse-temurin:21-jdk-jammy AS builder
 WORKDIR /app
 
 # Kopiujemy plik pom.xml i inne pliki konfiguracyjne Mavena
-COPY ./microservices/registry/pom.xml ./
-COPY ./microservices/registry/mvnw ./
-COPY ./microservices/registry/.mvn .mvn
+COPY ./microservices/gateway/pom.xml ./
+COPY ./microservices/gateway/mvnw ./
+COPY ./microservices/gateway/.mvn .mvn
+COPY ./libraries/commons ./commons
 
-# Pobieramy wszystkie zależności
-RUN ./mvnw dependency:go-offline -B
+# Budujemy commons
+RUN ./mvnw clean install -f ./commons/pom.xml
 
 # Kopiujemy cały projekt
-COPY ./microservices/registry/src ./src
+COPY ./microservices/gateway/src ./src
 
 # Kompilujemy projekt Spring Boot
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw clean install -DskipTests
 
 # Tworzymy obraz runtime na podstawie Javy
 FROM eclipse-temurin:21-jre-jammy
@@ -26,7 +27,7 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
 # Ustawiamy port, na którym aplikacja będzie nasłuchiwać (domyślnie 8080)
-EXPOSE 8761
+EXPOSE 8080
 
 # Definiujemy komendę startową
 ENTRYPOINT ["java", "-jar", "app.jar"]
