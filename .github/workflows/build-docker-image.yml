@@ -52,8 +52,8 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           no-cache: true
-          context: .
-          file: ./server/microservices/${{ matrix.service }}/Dockerfile
+          context: ./server
+          file: ./microservices/${{ matrix.service }}/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
