@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - DanielWorkflow
-    tags: [ gateway,auth,registry ]
+    tags: [ "gateway", "auth", "registry" ]
 
 env:
   REGISTRY: ghcr.io
@@ -42,7 +42,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: print
-        run: echo "${{ tags }}"
+        run: echo "${{ steps.meta.outputs.tags }}"
 
       # Budowanie i publikowanie obrazu na podstawie platformy z matrix
       - name: Build and push Docker image for ${{ matrix.platform }}
