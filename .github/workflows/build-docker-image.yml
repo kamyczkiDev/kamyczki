@@ -48,7 +48,7 @@ jobs:
           context: ./server
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }}
+          tags: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Generate artifact attestation for ${{ matrix.platform }}
