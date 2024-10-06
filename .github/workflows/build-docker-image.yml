@@ -40,10 +40,12 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
+      - name: print tags
+        run: echo "${{ steps.meta.outputs.tags }} CHUUUUUUUUUUUUJ CHUJCHUJCHUJ"
+
       # Budowanie i publikowanie obrazu na podstawie platformy z matrix
       - name: Build and push Docker image for ${{ matrix.platform }}
         id: push_image
-        run: echo "${{ steps.meta.outputs.tags }} CHUUUUUUUUUUUUJ CHUJCHUJCHUJ"
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: ./server
