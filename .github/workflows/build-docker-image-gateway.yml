@@ -52,7 +52,7 @@ jobs:
           context: ./server
           file: ./server/microservices/gateway/Dockerfile
           push: true
-          tags: tags: |
+          tags: |
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v1.0.0
           labels: ${{ steps.meta.outputs.labels }}
