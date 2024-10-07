@@ -21,6 +21,12 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+      
+      - name: Install OWASP Dependency-Check
+        run: |
+          wget https://downloads.sourceforge.net/project/owasp/DependencyCheck/6.6.2/dependency-check-6.6.2-release.zip
+          unzip dependency-check-6.6.2-release.zip
+          chmod +x dependency-check/bin/dependency-check.sh
 
       - name: Install commons
         run: |
@@ -46,22 +52,16 @@ jobs:
           mvn test
         working-directory: ./server/microservices/gateway
 
-      - name: Create directory for report
-        run: mkdir -p dependency-check-report
-
-      - name: Run OWASP Dependency-Check using Docker
+      - name: Run OWASP Dependency-Check
         run: |
-          docker run --rm \
-          -v $(pwd):/src \
-          -v $(pwd)/dependency-check-data:/data \
-          owasp/dependency-check \
-          --scan /src \
+          ./dependency-check/bin/dependency-check.sh \
+          --scan . \
           --format ALL \
-          --out /src/dependency-check-report \
-          --data /data
+          --out dependency-check-report \
+          --failOnCVSS 7
 
       - name: Upload report as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dependency-check-report
           path: dependency-check-report/
