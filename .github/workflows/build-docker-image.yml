@@ -7,6 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
   PLATFORMS: gateway,auth,registry
 
 jobs:
@@ -36,21 +37,18 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.platform }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ matrix.platform }},enable={{is_default_branch}}
+      - name: print
+        run: echo "${{ steps.meta.outputs.tags }}"
 
       - name: Build and push Docker image for ${{ matrix.platform }}
         id: push_image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: ./server
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}-${{ matrix.platform }}:${{ github.sha }}
+          tags: ghcr.io/isaribi/kamyczki:${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
-
-      - name: Generate artifact attestation for ${{ matrix.platform }}
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-name: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}-${{ matrix.platform }}:${{ github.sha }}
-          subject-digest: ${{ steps.push_image.outputs.digest }}
-          push-to-registry: true
