@@ -3,7 +3,7 @@ name: Create and publish Docker images
 on:
   push:
     branches:
-      - DanielWorkflow
+      - main
 
 env:
   REGISTRY: ghcr.io
@@ -37,9 +37,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ matrix.platform }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=${{ matrix.platform }},enable={{is_default_branch}}
+
       - name: Build and push Docker image for ${{ matrix.platform }}
         id: push_image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
@@ -47,5 +48,5 @@ jobs:
           context: ./server
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
-          tags: ${{ matrix.platform }}:latest
+          tags: ghcr.io/isaribi/kamyczki:${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
