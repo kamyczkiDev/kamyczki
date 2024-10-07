@@ -3,7 +3,7 @@ name: Create and publish Docker images
 on:
   push:
     branches:
-      - DanielWorkflow
+      - main
 
 env:
   REGISTRY: ghcr.io
