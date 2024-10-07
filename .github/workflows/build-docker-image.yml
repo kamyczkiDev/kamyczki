@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository }}  # Ta zmienna nie jest zmieniana, ale konwersja na małe litery odbywa się podczas tagowania.
   PLATFORMS: gateway,auth,registry  # Definiuje platformy
 
 jobs:
@@ -41,14 +41,15 @@ jobs:
           context: ./server
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
+          # Konwersja na małe litery przy tagowaniu
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }}-latest
+            ${{ env.REGISTRY }}/{{ github.repository | toLowerCase }}:${{ matrix.platform }}-latest
           labels: |
             platform=${{ matrix.platform }}
 
       - name: Generate artifact attestation for ${{ matrix.platform }}
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }}-latest
+          subject-name: ${{ env.REGISTRY }}/{{ github.repository | toLowerCase }}:${{ matrix.platform }}-latest
           subject-digest: ${{ steps.push_image.outputs.digest }}
           push-to-registry: true
