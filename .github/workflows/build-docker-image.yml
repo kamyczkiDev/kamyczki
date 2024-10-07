@@ -1,3 +1,4 @@
+#
 name: Create and publish Docker images
 
 on:
@@ -31,7 +32,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_PAT }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -41,7 +42,7 @@ jobs:
 
       - name: Build and push Docker image for ${{ matrix.platform }}
         id: push_image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: ./server
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
@@ -52,6 +53,6 @@ jobs:
       - name: Generate artifact attestation for ${{ matrix.platform }}
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }}
+          subject-name: isabiri/kamyczki:${{ matrix.platform }}
           subject-digest: ${{ steps.push_image.outputs.digest }}
           push-to-registry: true
