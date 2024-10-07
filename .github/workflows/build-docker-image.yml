@@ -47,15 +47,15 @@ jobs:
         id: push_image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          context: ./server
+          context: .
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/isabiri/kamyczki/${{ matrix.platform }}:latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.platform }}:latest
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Generate artifact attestation for ${{ matrix.platform }}
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/isabiri/kamyczki/${{ matrix.platform }}:latest
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.platform }}:latest
           subject-digest: ${{ steps.push_image.outputs.digest }}
           push-to-registry: true
