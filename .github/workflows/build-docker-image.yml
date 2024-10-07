@@ -43,10 +43,9 @@ jobs:
           push: true
           # Konwersja na małe litery przy tagowaniu
           tags: |
-            ${{ env.REGISTRY }}/{{ github.repository | toLowerCase }}:${{ matrix.platform }}-latest
+            ${{ env.REGISTRY }}/$${{ toLower(github.repository) }}:${{ matrix.platform }}-latest
           labels: |
             platform=${{ matrix.platform }}
-
       - name: Generate artifact attestation for ${{ matrix.platform }}
         uses: actions/attest-build-provenance@v1
         with:
