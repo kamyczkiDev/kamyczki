@@ -1,4 +1,4 @@
-name: Create and publish a Docker image
+name: Create and publish Docker images
 
 on:
   push:
@@ -8,10 +8,14 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  PLATFORMS: gateway,auth,registry
 
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [gateway, auth, registry]
     permissions:
       contents: read
       packages: write
@@ -31,63 +35,27 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ matrix.platform }},enable={{is_default_branch}}
+      - name: print
+        run: echo "${{ steps.meta.outputs.tags }}"
 
-      # Publikowanie obrazu mikroserwisu Gateway
-      - name: Build and push Docker gateway image
-        id: push_gateway
+      - name: Build and push Docker image for ${{ matrix.platform }}
+        id: push_image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: ./server
-          file: ./server/microservices/gateway/Dockerfile
+          file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:gateway  # Tag dla mikroserwisu Gateway
+          tags: ${{ matrix.platform }}:latest
           labels: ${{ steps.meta.outputs.labels }}
 
-      # Publikowanie obrazu mikroserwisu Auth
-      - name: Build and push Docker auth image
-        id: push_auth
-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
-        with:
-          context: ./server
-          file: ./server/microservices/auth/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:auth  # Tag dla mikroserwisu Auth
-          labels: ${{ steps.meta.outputs.labels }}
-
-      # Publikowanie obrazu mikroserwisu Registry
-      - name: Build and push Docker registry image
-        id: push_registry
-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
-        with:
-          context: ./server
-          file: ./server/microservices/registry/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:registry  # Tag dla mikroserwisu Registry
-          labels: ${{ steps.meta.outputs.labels }}
-
-      # Generowanie attestacji dla mikroserwisu Auth
-      - name: Generate artifact attestation for auth
+      - name: Generate artifact attestation for ${{ matrix.platform }}
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:auth
-          subject-digest: ${{ steps.push_auth.outputs.digest }}
-          push-to-registry: true
-
-      # Generowanie attestacji dla mikroserwisu Gateway
-      - name: Generate artifact attestation for gateway
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:gateway
-          subject-digest: ${{ steps.push_gateway.outputs.digest }}
-          push-to-registry: true
-
-      # Generowanie attestacji dla mikroserwisu Registry
-      - name: Generate artifact attestation for registry
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:registry
-          subject-digest: ${{ steps.push_registry.outputs.digest }}
+          subject-name: ${{ matrix.platform }}:latest
+          subject-digest: ${{ steps.push_image.outputs.digest }}
           push-to-registry: true
