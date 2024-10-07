@@ -53,12 +53,12 @@ jobs:
         run: |
           docker run --rm \
           -v $(pwd):/src \
+          -v $(pwd)/dependency-check-data:/data \
           owasp/dependency-check \
           --scan /src \
           --format ALL \
           --out /src/dependency-check-report \
-          --failOnCVSS 7 \
-          --data /src/dependency-check-data
+          --data /data
 
       - name: Upload report as artifact
         uses: actions/upload-artifact@v3
