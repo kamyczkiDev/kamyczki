@@ -24,8 +24,8 @@ jobs:
       
       - name: Install OWASP Dependency-Check
         run: |
-          wget https://downloads.sourceforge.net/project/owasp/DependencyCheck/6.6.2/dependency-check-6.6.2-release.zip
-          unzip dependency-check-6.6.2-release.zip
+          curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip
+          unzip dependency-check.zip -d dependency-check
           chmod +x dependency-check/bin/dependency-check.sh
 
       - name: Install commons
