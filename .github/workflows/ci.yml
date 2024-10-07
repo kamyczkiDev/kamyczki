@@ -1,12 +1,12 @@
-name: Java CI
+name: Java CI & security check
 
 on:
   push:
     branches:
-      - main
+      - DanielWorkflow
   pull_request:
     branches:
-      - main
+      - DanielWorkflow
 
 jobs:
   build:
@@ -21,6 +21,12 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+
+      - name: Download OWASP Dependency-Check
+        run: |
+          curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip
+          unzip dependency-check.zip -d dependency-check
+          ls -la dependency-check/bin
 
       - name: Install commons
         run: |
@@ -45,3 +51,13 @@ jobs:
           mvn clean install
           mvn test
         working-directory: ./server/microservices/gateway
+
+      - name: Run OWASP Dependency-Check
+        run: |
+          dependency-check/bin/dependency-check.sh --scan . --format ALL --out dependency-check-report
+
+      - name: Upload report as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-report
+          path: dependency-check-report/
