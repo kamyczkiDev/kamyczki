@@ -26,7 +26,7 @@ jobs:
         run: |
           curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v10.0.4/dependency-check-10.0.4-release.zip
           unzip dependency-check.zip -d dependency-check
-          chmod +x dependency-check/bin/dependency-check.sh
+          chmod +x dependency-check/dependency-check/bin/dependency-check.sh
 
       - name: Install commons
         run: |
@@ -54,7 +54,7 @@ jobs:
 
       - name: Run OWASP Dependency-Check
         run: |
-          ./dependency-check/bin/dependency-check.sh \
+          ./dependency-check/dependency-check/bin/dependency-check.sh \
           --scan . \
           --format ALL \
           --out dependency-check-report \
