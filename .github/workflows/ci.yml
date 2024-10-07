@@ -48,7 +48,7 @@ jobs:
 
       - name: Create directory for report
         run: mkdir -p dependency-check-report
-        
+
       - name: Run OWASP Dependency-Check using Docker
         run: |
           docker run --rm \
@@ -56,7 +56,9 @@ jobs:
           owasp/dependency-check \
           --scan /src \
           --format ALL \
-          --out /src/dependency-check-report
+          --out /src/dependency-check-report \
+          --failOnCVSS 7 \
+          --data /src/dependency-check-data
 
       - name: Upload report as artifact
         uses: actions/upload-artifact@v3
