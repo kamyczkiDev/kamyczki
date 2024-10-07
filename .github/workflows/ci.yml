@@ -22,6 +22,13 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Download OWASP Dependency-Check
+        run: |
+          curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip
+          mkdir dependency-check
+          unzip dependency-check.zip -d dependency-check
+          ls -la dependency-check
+
       - name: Install commons
         run: |
           mvn clean install
@@ -45,12 +52,6 @@ jobs:
           mvn clean install
           mvn test
         working-directory: ./server/microservices/gateway
-
-      - name: Download OWASP Dependency-Check
-        run: |
-          curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip
-          unzip dependency-check.zip -d dependency-check
-          ls -la dependency-check/bin
 
       - name: Run OWASP Dependency-Check
         run: |
