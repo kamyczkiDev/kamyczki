@@ -31,7 +31,7 @@ jobs:
           ./dependency-check/bin/dependency-check.sh --scan . --format ALL --out dependency-check-report
 
       - name: Upload report as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: dependency-check-report
           path: dependency-check-report/
