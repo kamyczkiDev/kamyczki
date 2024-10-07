@@ -43,13 +43,13 @@ jobs:
           push: true
           # Użyj bezpiecznego, ręcznego tagowania bez konwersji
           tags: |
-            ${{ env.REGISTRY }}/Isabiri/kamyczki-${{ matrix.platform }}:latest
+            ${{ env.REGISTRY }}/isabiri/kamyczki-${{ matrix.platform }}:latest
           labels: |
             platform=${{ matrix.platform }}
 
       - name: Generate artifact attestation for ${{ matrix.platform }}
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/Isabiri/kamyczki-${{ matrix.platform }}:latest
+          subject-name: ${{ env.REGISTRY }}/isabiri/kamyczki-${{ matrix.platform }}:latest
           subject-digest: ${{ steps.push_image.outputs.digest }}
           push-to-registry: true
