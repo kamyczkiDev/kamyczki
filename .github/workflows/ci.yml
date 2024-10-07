@@ -22,13 +22,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Download OWASP Dependency-Check
-        run: |
-          curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip
-          mkdir dependency-check
-          unzip dependency-check.zip -d dependency-check
-          ls -la dependency-check
-
       - name: Install commons
         run: |
           mvn clean install
@@ -53,9 +46,14 @@ jobs:
           mvn test
         working-directory: ./server/microservices/gateway
 
-      - name: Run OWASP Dependency-Check
+      - name: Run OWASP Dependency-Check using Docker
         run: |
-          dependency-check/bin/dependency-check.sh --scan . --format ALL --out dependency-check-report
+          docker run --rm \
+          -v $(pwd):/src \
+          owasp/dependency-check \
+          --scan /src \
+          --format ALL \
+          --out /src/dependency-check-report
 
       - name: Upload report as artifact
         uses: actions/upload-artifact@v3
