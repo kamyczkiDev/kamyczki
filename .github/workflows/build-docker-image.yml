@@ -50,12 +50,12 @@ jobs:
           context: .
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.platform }}:latest
+          tags: isabiri/kamyczki:${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Generate artifact attestation for ${{ matrix.platform }}
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.platform }}:latest
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }}
           subject-digest: ${{ steps.push_image.outputs.digest }}
           push-to-registry: true
