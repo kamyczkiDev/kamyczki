@@ -39,10 +39,6 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=${{ matrix.platform }},enable={{is_default_branch}}
-      - name: print
-        run: echo "${{ steps.meta.outputs.tags }}"
 
       - name: Build and push Docker image for ${{ matrix.platform }}
         id: push_image
@@ -51,7 +47,7 @@ jobs:
           context: ./server
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
-          tags: isabiri/kamyczki:${{ matrix.platform }}
+          tags: mex1can0/kamyczki:${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Generate artifact attestation for ${{ matrix.platform }}
