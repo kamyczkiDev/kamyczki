@@ -2,10 +2,10 @@ name: Java CI
 on:
   push:
     branches:
-      - DanielWorkflow
+      - main
   pull_request:
     branches:
-      - DanielWorkflow
+      - main
 
 jobs:
   build:
