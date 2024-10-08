@@ -58,7 +58,7 @@ jobs:
           --scan . \
           --format ALL \
           --out ./dependency-check/dependency-check/bin/dependency-check-report \
-          --failOnCVSS 7
+          --failOnCVSS 7 \
           --nvdApiKey ${{ secrets.NVD_API_KEY }}
         continue-on-error: true
 
