@@ -1,9 +1,8 @@
 name: OWASP Dependency-Check Weekly
 
 on:
-  push:
-    branches:
-      - DanielWorkflow
+  schedule:
+    - cron: '0 22 * * 0'
 
 jobs:
   dependency-check:
