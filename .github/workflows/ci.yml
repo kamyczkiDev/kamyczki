@@ -55,11 +55,11 @@ jobs:
       - name: Run OWASP Dependency-Check
         run: |
           ./dependency-check/dependency-check/bin/dependency-check.sh \
+          --nvd-api-key ${{ secrets.NVD_API_KEY }}
           --scan . \
           --format ALL \
           --out ./dependency-check/dependency-check/bin/dependency-check-report \
           --failOnCVSS 7
-          --nvd-api-key ${{ secrets.NVD_API_KEY }}
         continue-on-error: true
 
       - name: Upload report as artifact
