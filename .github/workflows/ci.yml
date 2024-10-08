@@ -57,7 +57,7 @@ jobs:
           ./dependency-check/dependency-check/bin/dependency-check.sh \
           --scan . \
           --format ALL \
-          --out ./dependency-check/dependency-check/bin/report/dependency-check-report \
+          --out ./dependency-check/dependency-check/bin/dependency-check-report \
           --failOnCVSS 7
         continue-on-error: true
 
@@ -65,4 +65,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dependency-check-report
-          path: ./dependency-check/dependency-check/bin/report
+          path: ./dependency-check/dependency-check/bin/dependency-check-report
