@@ -55,7 +55,7 @@ jobs:
       - name: Run OWASP Dependency-Check
         run: |
           ./dependency-check/dependency-check/bin/dependency-check.sh \
-          --nvd-api-key ${{ secrets.NVD_API_KEY }}
+          --nvdApiKey ${{ secrets.NVD_API_KEY }}
           --scan . \
           --format ALL \
           --out ./dependency-check/dependency-check/bin/dependency-check-report \
