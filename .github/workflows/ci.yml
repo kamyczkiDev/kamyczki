@@ -1,5 +1,4 @@
 name: Java CI
-
 on:
   push:
     branches:
@@ -45,3 +44,4 @@ jobs:
           mvn clean install
           mvn test
         working-directory: ./server/microservices/gateway
+

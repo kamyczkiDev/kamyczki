@@ -40,8 +40,6 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=${{ matrix.platform }},enable={{is_default_branch}}
-      - name: print
-        run: echo "${{ steps.meta.outputs.tags }}"
 
       - name: Build and push Docker image for ${{ matrix.platform }}
         id: push_image
