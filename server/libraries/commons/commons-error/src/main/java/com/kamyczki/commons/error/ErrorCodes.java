@@ -17,11 +17,11 @@ public enum ErrorCodes {
         this.status = status;
     }
 
-    public void throwWithObjectAndField(String entity, String field) {
-        throw new ErrorException(this.name(), this.message.formatted(entity, field), field, this.status);
+    public ErrorException throwWithObjectAndField(String entity, String field) {
+       return new  ErrorException(this.name(), this.message.formatted(entity, field), field, this.status);
     }
 
-    public void throwWithObjectAndFieldAndValue(String entity, String field, String value) {
-        throw new ErrorException(this.name(), this.message.formatted(entity, field, value), field, this.status);
+    public ErrorException throwWithObjectAndFieldAndValue(String entity, String field, String value) {
+        return new ErrorException(this.name(), this.message.formatted(entity, field, value), field, this.status);
     }
 }

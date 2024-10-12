@@ -36,6 +36,10 @@ class SecurityConfiguration implements WebMvcConfigurer {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/sign-in").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll() // Allow Swagger UI
+                        .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll() // Allow API docs
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll() // Swagger HTML
+                        .requestMatchers(HttpMethod.GET, "/webjars/**").permitAll() // Swagger UI Resources
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

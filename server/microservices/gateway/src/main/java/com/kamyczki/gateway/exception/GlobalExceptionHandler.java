@@ -45,6 +45,4 @@ public class GlobalExceptionHandler {
         RestError errorResponse = new RestError("UNEXPECTED_ERROR", ex.getMessage());
         return new ResponseEntity<>(errorResponse, INTERNAL_SERVER_ERROR);
     }
-
-
 }
