@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Http.Json;
 using KamyczkiMobile.Models;
+using Newtonsoft.Json;
 
 namespace KamyczkiMobile.Services;
 
@@ -24,7 +25,9 @@ public class AuthService : IAuthService
             password = userPassword,
             email = userEmail
         };
-        var response = await _client.PostAsJsonAsync("register", userRegisterRequest);
+        var response = await _client.PostAsJsonAsync("user/register", userRegisterRequest);
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var responseDto = JsonConvert.DeserializeObject<ResponseDto>(responseContent);
 
         return "test";
     }
