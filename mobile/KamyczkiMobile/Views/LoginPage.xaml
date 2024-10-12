@@ -34,7 +34,7 @@
         <Button Text="Załóz konto"
                 BackgroundColor="#007AFF"
                 TextColor="White"
-                Clicked="OnRegisterClicked"
+                Clicked="OnGoToRegisterClicked"
                 Margin="0,20"/>
 
         <Label x:Name="ErrorMessage"

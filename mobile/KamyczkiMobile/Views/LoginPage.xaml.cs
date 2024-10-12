@@ -37,9 +37,8 @@ public partial class LoginPage : ContentPage
         }
     }
 
-    private async void OnRegisterClicked(object sender, EventArgs e)
+    private async void OnGoToRegisterClicked(object sender, EventArgs e)
     {
-        await _authService.RegisterUser("test@test.pl", "test");
-        //await Shell.Current.GoToAsync("RegisterPage");
+        await Shell.Current.GoToAsync("RegisterPage");
     }
 }

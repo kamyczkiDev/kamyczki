@@ -41,6 +41,7 @@ public static class MauiProgram
 	public static MauiAppBuilder RegisterViews(this MauiAppBuilder builder)
     {
 		builder.Services.AddSingleton<LoginPage>();
+		builder.Services.AddSingleton<RegisterPage>();
         //builder.Services.AddSingleton<MainPage>();
         return builder;
     }
