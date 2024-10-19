@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: ./changelogs/tb-1.xml
+      relativeToChangelogFile: true
