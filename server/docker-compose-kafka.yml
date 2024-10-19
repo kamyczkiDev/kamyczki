@@ -1,0 +1,259 @@
+version: '3.8'
+
+services:
+  kafka-controller-1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kafka-controller-1
+    command:
+      - 'sh'
+      - '-c'
+      - '/opt/bitnami/scripts/kafka/setup.sh && kafka-storage.sh format --config "$${KAFKA_CONF_FILE}" --add-scram "SCRAM-SHA-256=[name=kafka_admin,password=secret-admin]" --cluster-id "N2Q0ZTNlMWFhMTgyNDhiZj" --ignore-formatted  && /opt/bitnami/scripts/kafka/run.sh' # Kraft specific initialise
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_KRAFT_CLUSTER_ID=N2Q0ZTNlMWFhMTgyNDhiZj
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=controller
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-controller-1:9191,2@kafka-controller-2:9192,3@kafka-controller-3:9193
+      # Listeners config
+      - KAFKA_CFG_LISTENERS=CONTROLLER://:9191
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:SASL_PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL=PLAIN
+      - KAFKA_CFG_SASL_ENABLED_MECHANISMS=SCRAM-SHA-256,PLAIN
+
+      # ACL config
+      - KAFKA_SUPER_USERS=User:controller_user,User:ANONYMOUS,User:admin,User:kafka_admin
+
+    ports:
+      - '9191:9191'
+    networks:
+      - kamyczki-network
+
+  kafka-controller-2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kafka-controller-2
+    command:
+      - 'sh'
+      - '-c'
+      - '/opt/bitnami/scripts/kafka/setup.sh && kafka-storage.sh format --config "$${KAFKA_CONF_FILE}" --add-scram "SCRAM-SHA-256=[name=kafka_admin,password=secret-admin]" --cluster-id "N2Q0ZTNlMWFhMTgyNDhiZj" --ignore-formatted  && /opt/bitnami/scripts/kafka/run.sh' # Kraft specific initialise
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_KRAFT_CLUSTER_ID=N2Q0ZTNlMWFhMTgyNDhiZj
+      - KAFKA_CFG_NODE_ID=2
+      - KAFKA_CFG_PROCESS_ROLES=controller
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-controller-1:9191,2@kafka-controller-2:9192,3@kafka-controller-3:9193
+      # Listeners config
+      - KAFKA_CFG_LISTENERS=CONTROLLER://:9192
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:SASL_PLAINTEXT
+      - KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL=PLAIN
+      - KAFKA_CFG_SASL_ENABLED_MECHANISMS=SCRAM-SHA-256,PLAIN
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+
+      # ACL config
+      - KAFKA_SUPER_USERS=User:controller_user,User:admin,User:kafka_admin
+
+    ports:
+      - '9192:9192'
+    networks:
+      - kamyczki-network
+
+  kafka-controller-3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kafka-controller-3
+    command:
+      - 'sh'
+      - '-c'
+      - '/opt/bitnami/scripts/kafka/setup.sh && kafka-storage.sh format --config "$${KAFKA_CONF_FILE}" --add-scram "SCRAM-SHA-256=[name=kafka_admin,password=secret-admin]" --cluster-id "N2Q0ZTNlMWFhMTgyNDhiZj" --ignore-formatted  && /opt/bitnami/scripts/kafka/run.sh' # Kraft specific initialise
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_KRAFT_CLUSTER_ID=N2Q0ZTNlMWFhMTgyNDhiZj
+      - KAFKA_CFG_NODE_ID=3
+      - KAFKA_CFG_PROCESS_ROLES=controller
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-controller-1:9191,2@kafka-controller-2:9192,3@kafka-controller-3:9193
+      # Listeners config
+      - KAFKA_CFG_LISTENERS=CONTROLLER://:9193
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:SASL_PLAINTEXT
+      - KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL=PLAIN
+      - KAFKA_CFG_SASL_ENABLED_MECHANISMS=SCRAM-SHA-256,PLAIN
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+
+      # ACL config
+      - KAFKA_SUPER_USERS=User:controller_user,User:ANONYMOUS,User:admin,User:kafka_admin
+    ports:
+      - '9193:9193'
+    networks:
+      - kamyczki-network
+
+  kafka-broker-1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: kafka-broker-1
+    container_name: kafka-broker-1
+    command:
+      - 'sh'
+      - '-c'
+      - '/opt/bitnami/scripts/kafka/setup.sh && kafka-storage.sh format --config "$${KAFKA_CONF_FILE}" --add-scram "SCRAM-SHA-256=[name=kafka_admin,password=secret-admin]" --cluster-id "N2Q0ZTNlMWFhMTgyNDhiZj" --ignore-formatted  && /opt/bitnami/scripts/kafka/run.sh' # Kraft specific initialise
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_KRAFT_CLUSTER_ID=N2Q0ZTNlMWFhMTgyNDhiZj
+      - KAFKA_MAX_REQUEST_SIZE=20000000
+      - KAFKA_MESSAGE_MAX_BYTES=20000000
+      - KAFKA_MAX_PARTITION_FETCH_BYTES=20000000
+      - KAFKA_FETCH_MESSAGE_MAX_BYTES=20000000
+      - KAFKA_CFG_NODE_ID=4
+      - KAFKA_CFG_PROCESS_ROLES=broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-controller-1:9191,2@kafka-controller-2:9192,3@kafka-controller-3:9193
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=3
+      # Listeners config
+      - KAFKA_CFG_LISTENERS=BROKER://:9092,PLAINTEXT://:9094,INTERNAL://:9095,EXTERNAL://:9200
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:SASL_PLAINTEXT,BROKER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      #change BROKER://'':9092 to BROKER://'your-local-ip':9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=BROKER://kafka-broker-1:9092,PLAINTEXT://localhost:9094,INTERNAL://kafka-broker-1:9095,EXTERNAL://localhost:9200
+
+      # Controller and broker config
+      - KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL=PLAIN
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=BROKER
+
+      # SSL config
+      - KAFKA_TLS_TYPE=JKS # or PEM
+      - KAFKA_CFG_SSL_KEYSTORE_LOCATION=/bitnami/kafka/config/certs/kafka.keystore.jks
+      - KAFKA_CFG_SSL_KEYSTORE_PASSWORD=123456a
+      - KAFKA_CFG_SSL_TRUSTSTORE_LOCATION=/bitnami/kafka/config/certs/kafka.truststore.jks
+      - KAFKA_CFG_SSL_KEY_PASSWORD=123456a
+      - KAFKA_CFG_SSL_TRUSTSTORE_PASSWORD=123456a
+      - KAFKA_CFG_PASSWORD_ENCODER_KEY_LENGTH=256
+
+      # ACL config
+      - KAFKA_SUPER_USERS=User:controller_user,User:admin,User:kafka_admin
+    networks:
+      - kamyczki-network
+
+    ports:
+      - '9200:9200'
+      - '9094:9094'
+
+  kafka-broker-2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: kafka-broker-2
+    container_name: kafka-broker-2
+    command:
+      - 'sh'
+      - '-c'
+      - '/opt/bitnami/scripts/kafka/setup.sh && kafka-storage.sh format --config "$${KAFKA_CONF_FILE}" --add-scram "SCRAM-SHA-256=[name=kafka_admin,password=secret-admin]" --cluster-id "N2Q0ZTNlMWFhMTgyNDhiZj" --ignore-formatted  && /opt/bitnami/scripts/kafka/run.sh' # Kraft specific initialise
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_KRAFT_CLUSTER_ID=N2Q0ZTNlMWFhMTgyNDhiZj
+      - KAFKA_MAX_REQUEST_SIZE=20000000
+      - KAFKA_MESSAGE_MAX_BYTES=20000000
+      - KAFKA_MAX_PARTITION_FETCH_BYTES=20000000
+      - KAFKA_FETCH_MESSAGE_MAX_BYTES=20000000
+      - KAFKA_CFG_NODE_ID=5
+      - KAFKA_CFG_PROCESS_ROLES=broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-controller-1:9191,2@kafka-controller-2:9192,3@kafka-controller-3:9193
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=3
+      # Listeners config
+      - KAFKA_CFG_LISTENERS=BROKER://:9092,PLAINTEXT://:9094,INTERNAL://:9095,EXTERNAL://:9210
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:SASL_PLAINTEXT,BROKER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      #change BROKER://'':9092 to BROKER://'your-local-ip':9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=BROKER://localhost:9092,INTERNAL://kafka-broker-2:9095,EXTERNAL://localhost:9210
+
+      # Controller and broker config
+      - KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL=PLAIN
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=BROKER
+
+      # SSL config
+      - KAFKA_TLS_TYPE=JKS # or PEM
+      - KAFKA_CFG_SSL_KEYSTORE_LOCATION=/bitnami/kafka/config/certs/kafka.keystore.jks
+      - KAFKA_CFG_SSL_KEYSTORE_PASSWORD=123456a
+      - KAFKA_CFG_SSL_TRUSTSTORE_LOCATION=/bitnami/kafka/config/certs/kafka.truststore.jks
+      - KAFKA_CFG_SSL_KEY_PASSWORD=123456a
+      - KAFKA_CFG_SSL_TRUSTSTORE_PASSWORD=123456a
+      - KAFKA_CFG_PASSWORD_ENCODER_KEY_LENGTH=256
+
+      # ACL config
+      - KAFKA_SUPER_USERS=User:controller_user,User:admin,User:kafka_admin
+    networks:
+      - kamyczki-network
+    ports:
+      - '9210:9210'
+
+  kafka-broker-3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: kafka-broker-3
+    container_name: kafka-broker-3
+    command:
+      - 'sh'
+      - '-c'
+      - '/opt/bitnami/scripts/kafka/setup.sh && kafka-storage.sh format --config "$${KAFKA_CONF_FILE}" --add-scram "SCRAM-SHA-256=[name=kafka_admin,password=secret-admin]" --cluster-id "N2Q0ZTNlMWFhMTgyNDhiZj" --ignore-formatted  && /opt/bitnami/scripts/kafka/run.sh' # Kraft specific initialise
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_KRAFT_CLUSTER_ID=N2Q0ZTNlMWFhMTgyNDhiZj
+      - KAFKA_MAX_REQUEST_SIZE=20000000
+      - KAFKA_MESSAGE_MAX_BYTES=20000000
+      - KAFKA_MAX_PARTITION_FETCH_BYTES=20000000
+      - KAFKA_FETCH_MESSAGE_MAX_BYTES=20000000
+      - KAFKA_CFG_NODE_ID=6
+      - KAFKA_CFG_PROCESS_ROLES=broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-controller-1:9191,2@kafka-controller-2:9192,3@kafka-controller-3:9193
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=3
+      # Listeners config
+      - KAFKA_CFG_LISTENERS=BROKER://:9092,PLAINTEXT://:9094,INTERNAL://:9095,EXTERNAL://:9220
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:SASL_PLAINTEXT,BROKER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      #change BROKER://'':9092 to BROKER://'your-local-ip':9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=BROKER://localhost:9092,PLAINTEXT://localhost:9094,INTERNAL://kafka-broker-3:9095,EXTERNAL://localhost:9220
+
+      # Controller and broker config
+      - KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL=PLAIN
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=BROKER
+
+      # SSL config
+      - KAFKA_TLS_TYPE=JKS # or PEM
+      - KAFKA_CFG_SSL_KEYSTORE_LOCATION=/bitnami/kafka/config/certs/kafka.keystore.jks
+      - KAFKA_CFG_SSL_KEYSTORE_PASSWORD=123456a
+      - KAFKA_CFG_SSL_TRUSTSTORE_LOCATION=/bitnami/kafka/config/certs/kafka.truststore.jks
+      - KAFKA_CFG_SSL_KEY_PASSWORD=123456a
+      - KAFKA_CFG_SSL_TRUSTSTORE_PASSWORD=123456a
+      - KAFKA_CFG_PASSWORD_ENCODER_KEY_LENGTH=256
+
+      # ACL config
+      - KAFKA_SUPER_USERS=User:controller_user,User:admin,User:kafka_admin
+    networks:
+      - kamyczki-network
+
+    ports:
+      - '9220:9220'
+
+  #kafdrop for topic/msg visualization
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    restart: "no"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka-broker-1:9095"
+    ports:
+      - "9000:9000"
+    depends_on:
+      - kafka-broker-1
+
+networks:
+  kamyczki-network:
+    driver: bridge
