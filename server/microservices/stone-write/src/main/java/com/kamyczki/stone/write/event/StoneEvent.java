@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @Document(collection = "stoneEvents")
 @ToString(callSuper = true)
-public class StoneEvent  {
+class StoneEvent  {
 
     @Id protected String id;
 
@@ -21,5 +21,4 @@ public class StoneEvent  {
 
     protected LocalDateTime timestamp;
     protected StoneEventType type;
-
 }

@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StoneEventRepository extends MongoRepository<StoneEvent,String> {
+interface StoneEventRepository extends MongoRepository<StoneEvent,String> {
 
     boolean existsByStoneId(String stoneId);
 }

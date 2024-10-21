@@ -8,10 +8,10 @@
 
     <changeSet id="create_table_stone" author="durskan">
         <createTable tableName="stone">
-            <column name="id" type="varchar(20)">
+            <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" primaryKeyName="STONE_ID_PK"/>
             </column>
-            <column name="userId" type="varchar(20)"/>
+            <column name="owner_user_id" type="bigint"/>
             <column name="name" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>

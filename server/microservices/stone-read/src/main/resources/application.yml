@@ -15,9 +15,11 @@ spring:
   kafka:
     bootstrap-servers: localhost:9200
     consumer:
-      group-id: my-consumer-group
+      group-id: stone-read-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
       properties:
+        spring.json.trusted.packages: "*"
         enable.auto.commit: false

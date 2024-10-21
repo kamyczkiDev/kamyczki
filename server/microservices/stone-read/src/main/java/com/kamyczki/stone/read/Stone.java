@@ -2,20 +2,19 @@ package com.kamyczki.stone.read;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
-@Entity(name = "stones")
+@Entity(name = "stone")
 @Builder
+@Getter
 @AllArgsConstructor
-public class Stone{
+@NoArgsConstructor
+class Stone{
 
    @Id
    private String id;
 
-    private Long ownerId;
+    private Long ownerUserId;
     private String name;
     private String description;
     private String zipCode;

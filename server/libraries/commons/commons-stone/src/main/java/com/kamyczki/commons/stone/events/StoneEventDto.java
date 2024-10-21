@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @ToString
 public class StoneEventDto {
     protected String id;
-
     protected String stoneId;
 
     protected LocalDateTime timestamp;

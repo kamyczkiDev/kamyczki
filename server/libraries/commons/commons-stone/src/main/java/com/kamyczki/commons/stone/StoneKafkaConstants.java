@@ -5,5 +5,5 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class StoneKafkaConstants {
 
-    public static String STONE_EVENTS_TOPIC = "stone_events";
+    public static final String STONE_CREATED_TOPIC = "stone_created_topic";
 }
