@@ -16,16 +16,12 @@ services:
       - KAFKA_CFG_NODE_ID=1
       - KAFKA_CFG_PROCESS_ROLES=controller
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-controller-1:9191,2@kafka-controller-2:9192,3@kafka-controller-3:9193
-      # Listeners config
       - KAFKA_CFG_LISTENERS=CONTROLLER://:9191
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:SASL_PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL=PLAIN
       - KAFKA_CFG_SASL_ENABLED_MECHANISMS=SCRAM-SHA-256,PLAIN
-
-      # ACL config
       - KAFKA_SUPER_USERS=User:controller_user,User:ANONYMOUS,User:admin,User:kafka_admin
-
     ports:
       - '9191:9191'
     networks:
@@ -46,16 +42,12 @@ services:
       - KAFKA_CFG_NODE_ID=2
       - KAFKA_CFG_PROCESS_ROLES=controller
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-controller-1:9191,2@kafka-controller-2:9192,3@kafka-controller-3:9193
-      # Listeners config
       - KAFKA_CFG_LISTENERS=CONTROLLER://:9192
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:SASL_PLAINTEXT
       - KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL=PLAIN
       - KAFKA_CFG_SASL_ENABLED_MECHANISMS=SCRAM-SHA-256,PLAIN
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-
-      # ACL config
       - KAFKA_SUPER_USERS=User:controller_user,User:admin,User:kafka_admin
-
     ports:
       - '9192:9192'
     networks:
@@ -76,14 +68,11 @@ services:
       - KAFKA_CFG_NODE_ID=3
       - KAFKA_CFG_PROCESS_ROLES=controller
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-controller-1:9191,2@kafka-controller-2:9192,3@kafka-controller-3:9193
-      # Listeners config
       - KAFKA_CFG_LISTENERS=CONTROLLER://:9193
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:SASL_PLAINTEXT
       - KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL=PLAIN
       - KAFKA_CFG_SASL_ENABLED_MECHANISMS=SCRAM-SHA-256,PLAIN
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-
-      # ACL config
       - KAFKA_SUPER_USERS=User:controller_user,User:ANONYMOUS,User:admin,User:kafka_admin
     ports:
       - '9193:9193'
@@ -113,31 +102,22 @@ services:
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
       - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
       - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=3
-      # Listeners config
       - KAFKA_CFG_LISTENERS=BROKER://:9092,PLAINTEXT://:9094,INTERNAL://:9095,EXTERNAL://:9200
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:SASL_PLAINTEXT,BROKER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      #change BROKER://'':9092 to BROKER://'your-local-ip':9092
       - KAFKA_CFG_ADVERTISED_LISTENERS=BROKER://kafka-broker-1:9092,PLAINTEXT://localhost:9094,INTERNAL://kafka-broker-1:9095,EXTERNAL://localhost:9200
-
-      # Controller and broker config
       - KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL=PLAIN
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=BROKER
-
-      # SSL config
-      - KAFKA_TLS_TYPE=JKS # or PEM
+      - KAFKA_TLS_TYPE=JKS
       - KAFKA_CFG_SSL_KEYSTORE_LOCATION=/bitnami/kafka/config/certs/kafka.keystore.jks
       - KAFKA_CFG_SSL_KEYSTORE_PASSWORD=123456a
       - KAFKA_CFG_SSL_TRUSTSTORE_LOCATION=/bitnami/kafka/config/certs/kafka.truststore.jks
       - KAFKA_CFG_SSL_KEY_PASSWORD=123456a
       - KAFKA_CFG_SSL_TRUSTSTORE_PASSWORD=123456a
       - KAFKA_CFG_PASSWORD_ENCODER_KEY_LENGTH=256
-
-      # ACL config
       - KAFKA_SUPER_USERS=User:controller_user,User:admin,User:kafka_admin
     networks:
       - kamyczki-network
-
     ports:
       - '9200:9200'
       - '9094:9094'
@@ -165,27 +145,19 @@ services:
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
       - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
       - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=3
-      # Listeners config
       - KAFKA_CFG_LISTENERS=BROKER://:9092,PLAINTEXT://:9094,INTERNAL://:9095,EXTERNAL://:9210
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:SASL_PLAINTEXT,BROKER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      #change BROKER://'':9092 to BROKER://'your-local-ip':9092
       - KAFKA_CFG_ADVERTISED_LISTENERS=BROKER://localhost:9092,INTERNAL://kafka-broker-2:9095,EXTERNAL://localhost:9210
-
-      # Controller and broker config
       - KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL=PLAIN
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=BROKER
-
-      # SSL config
-      - KAFKA_TLS_TYPE=JKS # or PEM
+      - KAFKA_TLS_TYPE=JKS
       - KAFKA_CFG_SSL_KEYSTORE_LOCATION=/bitnami/kafka/config/certs/kafka.keystore.jks
       - KAFKA_CFG_SSL_KEYSTORE_PASSWORD=123456a
       - KAFKA_CFG_SSL_TRUSTSTORE_LOCATION=/bitnami/kafka/config/certs/kafka.truststore.jks
       - KAFKA_CFG_SSL_KEY_PASSWORD=123456a
       - KAFKA_CFG_SSL_TRUSTSTORE_PASSWORD=123456a
       - KAFKA_CFG_PASSWORD_ENCODER_KEY_LENGTH=256
-
-      # ACL config
       - KAFKA_SUPER_USERS=User:controller_user,User:admin,User:kafka_admin
     networks:
       - kamyczki-network
@@ -215,35 +187,25 @@ services:
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
       - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
       - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=3
-      # Listeners config
       - KAFKA_CFG_LISTENERS=BROKER://:9092,PLAINTEXT://:9094,INTERNAL://:9095,EXTERNAL://:9220
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:SASL_PLAINTEXT,BROKER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      #change BROKER://'':9092 to BROKER://'your-local-ip':9092
       - KAFKA_CFG_ADVERTISED_LISTENERS=BROKER://localhost:9092,PLAINTEXT://localhost:9094,INTERNAL://kafka-broker-3:9095,EXTERNAL://localhost:9220
-
-      # Controller and broker config
       - KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL=PLAIN
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=BROKER
-
-      # SSL config
-      - KAFKA_TLS_TYPE=JKS # or PEM
+      - KAFKA_TLS_TYPE=JKS
       - KAFKA_CFG_SSL_KEYSTORE_LOCATION=/bitnami/kafka/config/certs/kafka.keystore.jks
       - KAFKA_CFG_SSL_KEYSTORE_PASSWORD=123456a
       - KAFKA_CFG_SSL_TRUSTSTORE_LOCATION=/bitnami/kafka/config/certs/kafka.truststore.jks
       - KAFKA_CFG_SSL_KEY_PASSWORD=123456a
       - KAFKA_CFG_SSL_TRUSTSTORE_PASSWORD=123456a
       - KAFKA_CFG_PASSWORD_ENCODER_KEY_LENGTH=256
-
-      # ACL config
       - KAFKA_SUPER_USERS=User:controller_user,User:admin,User:kafka_admin
     networks:
       - kamyczki-network
-
     ports:
       - '9220:9220'
 
-  #kafdrop for topic/msg visualization
   kafdrop:
     image: obsidiandynamics/kafdrop
     restart: "no"
