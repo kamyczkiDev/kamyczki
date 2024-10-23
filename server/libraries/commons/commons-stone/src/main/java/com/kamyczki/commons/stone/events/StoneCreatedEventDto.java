@@ -8,8 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class StoneCreatedEventDto extends StoneEventDto{
-    
+public class StoneCreatedEventDto extends StoneEventDto {
     protected String name;
     protected String description;
     protected String zipCode;
