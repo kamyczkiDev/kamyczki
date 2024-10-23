@@ -1,0 +1,21 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: stone
+
+  data:
+    mongodb:
+      uri: mongodb+srv://natalia:JJe7UxP2HtSDaP3R@kamyczki.kjqj1.mongodb.net/stone
+
+  kafka:
+    bootstrap-servers: localhost:9200
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      batch-size: 16384
+      linger-ms: 1
+      buffer-memory: 33554432

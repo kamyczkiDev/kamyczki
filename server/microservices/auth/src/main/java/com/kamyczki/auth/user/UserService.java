@@ -22,12 +22,9 @@ class UserService implements UserFacade {
 
     @Override
     public UserDetailsDto getUserDetails(String username) {
-        var optional = userRepository.findByUsername(username);
-        if (optional.isEmpty()) {
-            RESOURCE_NOT_FOUND.throwWithObjectAndFieldAndValue("User", "username", username);
-        }
-
-        return userMapper.toUserDetails(optional.get());
+        return userRepository.findByUsername(username)
+                .map(userMapper::toUserDetails)
+                .orElseThrow(()->  RESOURCE_NOT_FOUND.throwWithObjectAndFieldAndValue("User", "username", username));
     }
 
     UserDto registerUser(RegisterUserDto registerUserDto) {
@@ -44,13 +41,13 @@ class UserService implements UserFacade {
     //todo consider creating web binder validators?
     private void verifyEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            RESOURCE_ALREADY_EXISTS.throwWithObjectAndField("User", "email");
+            throw RESOURCE_ALREADY_EXISTS.throwWithObjectAndField("User", "email");
         }
     }
 
     private void verifyUsername(String username) {
         if (userRepository.existsByUsername(username)) {
-            RESOURCE_ALREADY_EXISTS.throwWithObjectAndField("User", "username");
+           throw RESOURCE_ALREADY_EXISTS.throwWithObjectAndField("User", "username");
         }
     }
 }
