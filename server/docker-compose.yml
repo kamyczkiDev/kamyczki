@@ -27,11 +27,8 @@ services:
     image: ghcr.io/isaribi/kamyczki:stone-write
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-broker-1:9200
     depends_on:
-      - db
       - registry
-      - auth_app
     ports:
       - '8083:8083'
     networks:
@@ -45,10 +42,13 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-broker-1:9200,kafka-broker-2:9210,kafka-broker-3:9220
     depends_on:
       - db
       - registry
-      - auth_app
+      - kafka-broker-1
+      - kafka-broker-2
+      - kafka-broker-3
     ports:
       - '8082:8082'
     networks:

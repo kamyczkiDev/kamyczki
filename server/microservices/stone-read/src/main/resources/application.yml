@@ -18,7 +18,7 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog-master.yml
   kafka:
-    bootstrap-servers: kafka-broker-1:9200
+    bootstrap-servers: localhost:9200
     consumer:
       group-id: stone-read-group
       auto-offset-reset: earliest
