@@ -23,7 +23,7 @@ services:
       - kamyczki-network
     
   stone-write:
-    container_name: eureka_registry
+    container_name: stone-write
     image: ghcr.io/isaribi/kamyczki:stone-write
     ports:
       - '8083:8083'
@@ -31,7 +31,7 @@ services:
       - kamyczki-network
   
   stone-read:
-    container_name: eureka_registry
+    container_name: stone-read
     image: ghcr.io/isaribi/kamyczki:stone-read
     ports:
       - '8082:8082'
