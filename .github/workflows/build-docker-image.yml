@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [gateway, auth, registry]
+        platform: [gateway, auth, registry, stone-read, stone-write]
     permissions:
       contents: read
       packages: write
