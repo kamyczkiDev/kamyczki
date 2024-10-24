@@ -10,10 +10,10 @@ WORKDIR /app
 COPY ./microservices/auth/pom.xml ./
 COPY ./microservices/auth/mvnw ./
 COPY ./microservices/auth/.mvn .mvn
-COPY ./libraries/commons ./commons
+COPY ./libraries/commons-error ./commons-error
 
 # Budujemy commons
-RUN ./mvnw clean install -f ./commons/pom.xml
+RUN ./mvnw clean install -f ./commons-error/pom.xml
 
 # Kopiujemy cały projekt
 COPY ./microservices/auth/src ./src

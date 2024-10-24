@@ -10,10 +10,10 @@ WORKDIR /app
 COPY ./microservices/stone-read/pom.xml ./
 COPY ./microservices/stone-read/mvnw ./
 COPY ./microservices/stone-read/.mvn .mvn
-COPY ./libraries/commons ./commons
+COPY ./libraries/commons-stone ./commons-stone
 
 # Budujemy commons
-RUN ./mvnw clean install -f ./commons/pom.xml
+RUN ./mvnw clean install -f ./commons-stone/pom.xml
 
 # Kopiujemy cały projekt
 COPY ./microservices/stone-read/src ./src
