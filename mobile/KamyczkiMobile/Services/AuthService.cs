@@ -88,7 +88,7 @@ public class AuthService : IAuthService
 
     public async Task<string> RefreshToken()
     {
-         try
+        try
         {
             await SecureStorage.Default.SetAsync("access_token", "test");
         }

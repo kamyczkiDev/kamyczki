@@ -31,7 +31,7 @@ public static class MauiProgram
 #if IOS
        // builder.Services.AddSingleton<IDeviceInstallationService, PushNotificationsDemo.Platforms.iOS.DeviceInstallationService>();
 #elif ANDROID
-        builder.Services.AddSingleton<IDeviceInstallationService, PushNotificationsDemo.Platforms.Android.DeviceInstallationService>();
+        //builder.Services.AddSingleton<IDeviceInstallationService, PushNotificationsDemo.Platforms.Android.DeviceInstallationService>();
 #endif
         builder.Services.AddSingleton<IAuthService>(new AuthService(Config.BackendServiceEndpoint, Config.AuthControllerUri));
 

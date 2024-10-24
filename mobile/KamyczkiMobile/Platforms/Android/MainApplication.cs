@@ -3,7 +3,8 @@ using Android.Runtime;
 
 namespace KamyczkiMobile;
 
-[Application]
+//Android shit (UsesCleartextTraffic = true) zeby w localu dzialalo elo
+[Application(UsesCleartextTraffic = true)]
 public class MainApplication : MauiApplication
 {
 	public MainApplication(IntPtr handle, JniHandleOwnership ownership)
