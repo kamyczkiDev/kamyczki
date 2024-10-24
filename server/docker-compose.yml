@@ -11,6 +11,7 @@ services:
       - '8761:8761'
     networks:
       - kamyczki-network
+
   gateway:
     container_name: gateway
     image: ghcr.io/isaribi/kamyczki:gateway
@@ -18,6 +19,22 @@ services:
       - '8080:8080'
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka/
+    networks:
+      - kamyczki-network
+    
+  stone-write:
+    container_name: eureka_registry
+    image: ghcr.io/isaribi/kamyczki:stone-write
+    ports:
+      - '8083:8083'
+    networks:
+      - kamyczki-network
+  
+  stone-read:
+    container_name: eureka_registry
+    image: ghcr.io/isaribi/kamyczki:stone-read
+    ports:
+      - '8082:8082'
     networks:
       - kamyczki-network
       
