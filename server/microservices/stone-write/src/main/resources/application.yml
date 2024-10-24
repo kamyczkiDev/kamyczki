@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: stone
+    name: stone-write
 
   data:
     mongodb:

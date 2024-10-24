@@ -25,6 +25,11 @@ services:
   stone-write:
     container_name: stone-write
     image: ghcr.io/isaribi/kamyczki:stone-write
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=localhost:9200
+    depends_on:
+      - db
     ports:
       - '8083:8083'
     networks:
@@ -33,6 +38,14 @@ services:
   stone-read:
     container_name: stone-read
     image: ghcr.io/isaribi/kamyczki:stone-read
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka
+    depends_on:
+      - db
+      - gateway
     ports:
       - '8082:8082'
     networks:
