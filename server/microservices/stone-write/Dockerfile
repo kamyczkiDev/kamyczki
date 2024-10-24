@@ -16,6 +16,7 @@ COPY ./libraries/commons ./commons
 RUN chmod +x mvnw ./mvnw
 RUN ./mvnw clean install -f ./commons/pom.xml
 RUN ./mvnw clean install -f ./commons/commons-stone/pom.xml
+RUN ./mvnw clean install -f ./commons/commons-error/pom.xml
 
 # Kopiujemy cały projekt
 COPY ./microservices/stone-write/src ./src
