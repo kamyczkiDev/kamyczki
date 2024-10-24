@@ -15,7 +15,7 @@ spring:
       uri: mongodb+srv://natalia:JJe7UxP2HtSDaP3R@kamyczki.kjqj1.mongodb.net/stone
 
   kafka:
-    bootstrap-servers: localhost:9200
+    bootstrap-servers: kafka-broker-1:9200
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
