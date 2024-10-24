@@ -13,6 +13,7 @@ COPY ./microservices/stone-write/.mvn .mvn
 COPY ./libraries/commons ./commons
 
 # Budujemy commons
+RUN chmod +x mvnw ./mvnw
 RUN ./mvnw clean install -f ./commons/commons-stone/pom.xml
 
 # Kopiujemy cały projekt
