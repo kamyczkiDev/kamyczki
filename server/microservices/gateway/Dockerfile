@@ -8,10 +8,10 @@ WORKDIR /app
 COPY ./microservices/gateway/pom.xml ./
 COPY ./microservices/gateway/mvnw ./
 COPY ./microservices/gateway/.mvn .mvn
-COPY ./libraries/commons-error ./commons-error
+COPY ./libraries/commons ./commons
 
 # Budujemy commons
-RUN ./mvnw clean install -f ./commons-error/pom.xml
+RUN ./mvnw clean install -f ./commons/pom.xml
 
 # Kopiujemy cały projekt
 COPY ./microservices/gateway/src ./src
