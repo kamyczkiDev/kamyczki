@@ -1,6 +1,8 @@
+# Używamy obrazu JDK do budowy
 FROM eclipse-temurin:21-jdk-jammy AS builder
 
 LABEL org.opencontainers.image.description DESCRIPTION
+
 # Ustawiamy katalog roboczy wewnątrz kontenera
 WORKDIR /app
 
@@ -8,15 +10,16 @@ WORKDIR /app
 COPY ./microservices/stone-write/pom.xml ./
 COPY ./microservices/stone-write/mvnw ./
 COPY ./microservices/stone-write/.mvn .mvn
+COPY ./libraries/commons ./commons
 
-# Pobieramy wszystkie zależności
-RUN ./mvnw dependency:go-offline -B
+# Budujemy commons
+RUN ./mvnw clean install -f ./commons/pom.xml
 
 # Kopiujemy cały projekt
 COPY ./microservices/stone-write/src ./src
 
 # Kompilujemy projekt Spring Boot
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw clean install -DskipTests
 
 # Tworzymy obraz runtime na podstawie Javy
 FROM eclipse-temurin:21-jre-jammy
