@@ -10,7 +10,7 @@ WORKDIR /app
 COPY ./microservices/stone-write/pom.xml ./
 COPY ./microservices/stone-write/mvnw ./
 COPY ./microservices/stone-write/.mvn .mvn
-COPY ./libraries/commons-stone ./commons-stone
+COPY ./libraries/commons ./commons
 
 # Budujemy commons
 RUN ./mvnw clean install -f ./commons/commons-stone/pom.xml
