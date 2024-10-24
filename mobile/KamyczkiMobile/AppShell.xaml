@@ -9,7 +9,7 @@
     Title="KamyczkiMobile">
 
     <ShellContent
-        Title="Home"
+        Title="Login"
         ContentTemplate="{DataTemplate views:LoginPage}"
         Route="LoginPage" />
 
