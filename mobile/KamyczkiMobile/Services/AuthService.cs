@@ -19,6 +19,7 @@ public class AuthService : IAuthService
 
     public async Task<string> RegisterUser(string username, string userEmail, string userPassword)
     {
+        var responseCode = String.Empty;
         var userRegisterRequest = new UserRegisterRequest
         {
             username = username,
@@ -29,26 +30,54 @@ public class AuthService : IAuthService
 
         if(response.IsSuccessStatusCode)
         {
-            return "SUCESS_CODE";
+            responseCode = ResponseCodes.GetSuccessCode();
         }
-        var responseContent = await response.Content.ReadAsStringAsync();
-        var responseDto = JsonConvert.DeserializeObject<ResponseDto>(responseContent);
+        else
+        {
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var responseDto = JsonConvert.DeserializeObject<ResponseDto>(responseContent);
 
-        return responseDto.code;
+            responseCode = responseDto.code;
+        }
+        
+        return responseCode;
     }
 
-    public async Task<string> Login(string userEmail, string userPassword)
+    public async Task<string> Login(string username, string password)
     {
-        try
+        var responseCode = String.Empty;
+        var loginRequest = new LoginRequest
         {
-            await SecureStorage.Default.SetAsync("access_token", "test");
+            username = username,
+            password = password
+        };
+        var response = await _client.PostAsJsonAsync("/auth/sign-in", loginRequest);
+
+        if(response.IsSuccessStatusCode)
+        {
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
+
+            try
+            {
+                await SecureStorage.Default.SetAsync("access_token", loginResponse.token);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            responseCode = ResponseCodes.GetSuccessCode();
         }
-        catch(Exception ex)
+        else
         {
-            Console.WriteLine(ex);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var responseDto = JsonConvert.DeserializeObject<ResponseDto>(responseContent);
+
+            responseCode = responseDto.code;
         }
 
-        return "test";
+        return responseCode;
     }
 
     public async Task<string> Logout()
