@@ -30,6 +30,8 @@ services:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9200
     depends_on:
       - db
+      - registry
+      - auth_app
     ports:
       - '8083:8083'
     networks:
@@ -45,7 +47,8 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka
     depends_on:
       - db
-      - gateway
+      - registry
+      - auth_app
     ports:
       - '8082:8082'
     networks:
