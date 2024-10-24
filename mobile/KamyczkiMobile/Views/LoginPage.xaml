@@ -2,45 +2,58 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="KamyczkiMobile.Views.LoginPage"
-             Title="Login">
-    <StackLayout Padding="30" VerticalOptions="Center">
-        <Label Text="Kamyczki ^^"
-                FontSize="32"
-                FontAttributes="Bold"
-                TextColor="Black"
-                HorizontalOptions="Center"
-                Margin="0,10"/>
-
-        <Entry x:Name="UsernameEntry"
-               Placeholder="Nazwa uytkownika"
-               Keyboard="Text"
-               Margin="0,10"
-               TextColor="Black"
-               BackgroundColor="#f0f0f0"/>
-
-        <Entry x:Name="PasswordEntry"
-               Placeholder="Hasło"
-               IsPassword="True"
-               Margin="0,10"
-               TextColor="Black"
-               BackgroundColor="#f0f0f0"/>
-
-        <Button Text="Zaloguj"
-                BackgroundColor="#007AFF"
-                TextColor="White"
-                Clicked="OnLoginClicked"
-                Margin="0,20"/>
-       
-        <Button Text="Załóz konto"
-                BackgroundColor="#007AFF"
-                TextColor="White"
-                Clicked="OnGoToRegisterClicked"
-                Margin="0,20"/>
-
-        <Label x:Name="ErrorMessage"
-               TextColor="Red"
-               IsVisible="False"
-               FontAttributes="Bold"
-               HorizontalOptions="Center" />
-    </StackLayout>
+             BackgroundColor="#41511e"
+             Shell.NavBarIsVisible="False">
+    <VerticalStackLayout Margin="20,40,20,0" Padding="0">
+        <Frame BackgroundColor="#596e2a" Padding="10,30,10,30" HasShadow="True" BorderColor="#41511e" >
+            <VerticalStackLayout Margin="0">
+                <Image  Source="logo"
+                        HorizontalOptions="Center"
+                        HeightRequest="150"
+                        WidthRequest="150"/>
+                <Label Text="KAMYCZKI"
+                       TextColor="White"
+                       FontSize="Title"
+                       HorizontalOptions="Center"/>
+                <VerticalStackLayout Margin="25,30,25,30" Spacing="35">
+                    <Border Stroke="#3D5402" StrokeShape="RoundRectangle 10,10,10,10" StrokeThickness="2" BackgroundColor="#405803">
+                        <Entry x:Name="EntUsername"
+                           Placeholder="Nazwa użytkownika"
+                           PlaceholderColor="White"
+                           TextColor="White"/>
+                    </Border>
+                    <Border Stroke="#3D5402" StrokeShape="RoundRectangle 10,10,10,10" StrokeThickness="2" BackgroundColor="#405803">
+                        <Entry x:Name="EntPassword"
+                       Placeholder="Hasło"
+                       PlaceholderColor="White"
+                       TextColor="White"
+                       IsPassword="True"/>
+                    </Border>
+                    <Label Text="Zapomniałeś hasła?"
+                       FontSize="Small"
+                       TextColor="#6FFFE9"/>
+                    <Button x:Name="BtnLogin"
+                        Text="Zaloguj się"
+                        HeightRequest="50"
+                        WidthRequest="250"
+                        BorderColor="#342D15"
+                        BorderWidth="2"
+                        FontSize="Medium"
+                        BackgroundColor="#3E3419"
+                        Clicked="BtnLogin_Clicked"/>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </Frame>
+        <HorizontalStackLayout HorizontalOptions="Center" Margin="0,20,0,0">
+            <Label Text="Nie masz konta? "
+                   FontSize="Medium"
+                   TextColor="White"/>
+            <Label Text="Zarejestruj się!"
+                   FontSize="Medium"
+                   TextColor="#6FFFE9"/>
+            <HorizontalStackLayout.GestureRecognizers>
+                <TapGestureRecognizer x:Name="TapRegister" Tapped="TapRegister_Tapped" />
+            </HorizontalStackLayout.GestureRecognizers>
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
 </ContentPage>
