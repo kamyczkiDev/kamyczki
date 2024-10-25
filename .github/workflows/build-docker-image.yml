@@ -3,7 +3,7 @@ name: Create and publish Docker images
 on:
   push:
     branches:
-      - maindaniel/kafkatest
+      - daniel/kafkatest
 
 env:
   REGISTRY: ghcr.io
