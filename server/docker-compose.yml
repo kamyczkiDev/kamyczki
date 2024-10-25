@@ -27,6 +27,7 @@ services:
     image: ghcr.io/isaribi/kamyczki:stone-write
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-broker-1:9200,kafka-broker-2:9210,kafka-broker-3:9220
     depends_on:
       - registry
     ports:
