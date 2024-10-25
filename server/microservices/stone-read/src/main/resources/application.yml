@@ -8,7 +8,7 @@ eureka:
 
 spring:
   application:
-    name: stone
+    name: stone-read
 
   datasource:
     username: postgres
