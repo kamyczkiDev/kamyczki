@@ -21,3 +21,15 @@ spring:
             - Path=/auth/**
           filters:
             - StripPrefix=1
+        - id: stone-read
+          uri: lb://stone-read
+          predicates:
+            - Path=/stone-read/**
+          filters:
+            - StripPrefix=1
+        - id: stone-write
+          uri: lb://stone-write
+          predicates:
+            - Path=/stone-write/**
+          filters:
+            - StripPrefix=1

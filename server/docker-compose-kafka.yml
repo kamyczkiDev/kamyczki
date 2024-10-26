@@ -214,6 +214,21 @@ services:
   #     - "9000:9000"
   #   depends_on:
   #     - kafka-broker-1
+  init-kafka:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka-broker-1
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+      kafka-configs.sh --bootstrap-server kafka-broker-1:9095 --entity-type users --describe
+      kafka-topics.sh --bootstrap-server kafka-broker-1:9095 --create --topic stone_created_topic --partitions 3 --replication-factor 1"
+    networks:
+      - kamyczki-network
+
 
 networks:
   kamyczki-network:
