@@ -11,31 +11,28 @@ public partial class LoginPage : ContentPage
 		InitializeComponent();
         _authService = authService;
 	}
-	private async void BtnLogin_Clicked(object sender, EventArgs e)
+    private async void BtnLogin_Clicked(object sender, EventArgs e)
     {
         string username = EntUsername.Text;
         string password = EntPassword.Text;
-        // Simple validation check
+
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
         {
-            //ErrorMessage.Text = "Please enter both username and password.";
-            //ErrorMessage.IsVisible = true;
             await DisplayAlert("UWAGA", "Proszę uzupełnić oba pola", "OK");
             return;
         }
-        // Hardcoded login for demonstration purposes
-        if (username == "admin" && password == "password")
+        string responseCode = await _authService.Login(username, password);
+        string errorCode = ResponseCodes.IsErrorCode(responseCode);
+
+        if (!string.IsNullOrEmpty(errorCode))
         {
-            await DisplayAlert("", "Zalogowano", "OK");
-            //ErrorMessage.Text = "Zalogowano!";
-            //ErrorMessage.TextColor = Colors.Green;
-            //ErrorMessage.IsVisible = true;
+            await DisplayAlert("BŁĄD",errorCode, "OK");
+            return;
         }
         else
         {
-            await DisplayAlert("","Nieprawidłowa nazwa uytkownika lub hasło.", "OK");
-            //ErrorMessage.Text = "Nieprawidłowa nazwa uytkownika lub hasło.";
-            //ErrorMessage.IsVisible = true;
+            //await DisplayAlert("DZIALA KURWA", responseCode, "OK");
+            await Shell.Current.GoToAsync("//MainPage",true);
         }
     }
     private async void TapRegister_Tapped(object sender, TappedEventArgs e)
@@ -46,7 +43,7 @@ public partial class LoginPage : ContentPage
         try
         {
             _isChangingPages = true;
-            await Shell.Current.GoToAsync(nameof(RegisterPage),true);
+            await Shell.Current.GoToAsync(nameof(RegisterPage));
         }
         finally
         {

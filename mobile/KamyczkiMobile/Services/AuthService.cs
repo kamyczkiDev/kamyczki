@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using KamyczkiMobile.Models;
 using Newtonsoft.Json;
@@ -8,15 +9,13 @@ namespace KamyczkiMobile.Services;
 
 public class AuthService : IAuthService
 {
-    HttpClient _client;
-
-    public AuthService(string baseApiUrl, string authUri)
+    private readonly HttpClient _client;
+    private string _token; //token w pamieci zeby za kazdym razem nie brac ze storage i nie zajechac ajfonika? refresh token(ulu)
+    public AuthService(HttpClient client)
     {
-        _client = new HttpClient();
+        _client = client;
         _client.DefaultRequestHeaders.Add("Accept", "application/json");
-        _client.BaseAddress = new Uri(baseApiUrl + authUri);
     }
-
     public async Task<string> RegisterUser(string username, string userEmail, string userPassword)
     {
         var responseCode = String.Empty;
@@ -42,25 +41,26 @@ public class AuthService : IAuthService
         
         return responseCode;
     }
-
     public async Task<string> Login(string username, string password)
     {
         var responseCode = String.Empty;
+
         var loginRequest = new LoginRequest
         {
             username = username,
             password = password
         };
-        var response = await _client.PostAsJsonAsync("/auth/sign-in", loginRequest);
+        var response = await _client.PostAsJsonAsync("auth/sign-in", loginRequest);
 
         if(response.IsSuccessStatusCode)
         {
             var responseContent = await response.Content.ReadAsStringAsync();
             var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
-
             try
             {
+                _token = loginResponse.token;
                 await SecureStorage.Default.SetAsync("access_token", loginResponse.token);
+                SetAuthorizationHeaderAfterLogin();
             }
             catch(Exception ex)
             {
@@ -79,13 +79,31 @@ public class AuthService : IAuthService
 
         return responseCode;
     }
-
     public async Task<string> Logout()
     {
+        _token = string.Empty;
         SecureStorage.Default.RemoveAll();
-        return "test";
+        _client.DefaultRequestHeaders.Authorization = null;
+        return "no za brame juz";
     }
-
+    private void SetAuthorizationHeaderAfterLogin()
+    {
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+    }
+    public HttpClient GetHttpClient() => _client;
+    public async Task<string> CheckAndGetToken()
+    {
+        if (string.IsNullOrEmpty(_token))
+        {
+            //sprawdzic czy token ze stored¿a valid, tera taki placeholder
+            _token = await SecureStorage.Default.GetAsync("access_token");
+        }
+        else
+        {
+            _token = string.Empty;
+        }
+        return _token;
+    }
     public async Task<string> RefreshToken()
     {
         try

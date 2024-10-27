@@ -6,10 +6,23 @@
     xmlns:local="clr-namespace:KamyczkiMobile"
     xmlns:views="clr-namespace:KamyczkiMobile.Views"
     Shell.FlyoutBehavior="Disabled"
+    Shell.FlyoutItemIsVisible="False"
+    Shell.TabBarIsVisible="False"
     Title="KamyczkiMobile">
 
+    <FlyoutItem Title="Account">
+        <ShellContent
+                Title="Login"
+                ContentTemplate="{DataTemplate views:LoginPage}"
+                Route="LoginPage" />
+        <ShellContent
+                Title="Register"
+                ContentTemplate="{DataTemplate views:RegisterPage}"
+                Route="RegisterPage" />
+    </FlyoutItem>
+    
     <ShellContent
-            Title="Login"
-            ContentTemplate="{DataTemplate views:LoginPage}"
-            Route="LoginPage" />
+        Title="MainPage"
+        ContentTemplate="{DataTemplate views:MainPage}"
+        Route="MainPage" />
 </Shell>

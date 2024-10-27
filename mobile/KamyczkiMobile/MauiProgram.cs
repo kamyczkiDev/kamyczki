@@ -29,20 +29,25 @@ public static class MauiProgram
 	public static MauiAppBuilder RegisterServices(this MauiAppBuilder builder)
     {
 #if IOS
-       // builder.Services.AddSingleton<IDeviceInstallationService, PushNotificationsDemo.Platforms.iOS.DeviceInstallationService>();
+		// builder.Services.AddSingleton<IDeviceInstallationService, PushNotificationsDemo.Platforms.iOS.DeviceInstallationService>();
 #elif ANDROID
         //builder.Services.AddSingleton<IDeviceInstallationService, PushNotificationsDemo.Platforms.Android.DeviceInstallationService>();
 #endif
-        builder.Services.AddSingleton<IAuthService>(new AuthService(Config.BackendServiceEndpoint, Config.AuthControllerUri));
+		builder.Services.AddSingleton(sp =>
+		{
+			var httpClient = new HttpClient { BaseAddress = new Uri(Config.BackendServiceEndpoint + Config.AuthControllerUri) };
+			return httpClient;
+		});
+		builder.Services.AddSingleton<IAuthService, AuthService>();
 
         return builder;
     }
 
 	public static MauiAppBuilder RegisterViews(this MauiAppBuilder builder)
     {
-		builder.Services.AddSingleton<LoginPage>();
-		builder.Services.AddSingleton<RegisterPage>();
-        //builder.Services.AddSingleton<MainPage>();
+        builder.Services.AddSingleton<Views.MainPage>();
+		builder.Services.AddTransient<LoginPage>();
+		builder.Services.AddTransient<RegisterPage>();
         return builder;
     }
 }

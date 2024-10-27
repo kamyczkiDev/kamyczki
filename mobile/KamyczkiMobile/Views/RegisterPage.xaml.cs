@@ -6,7 +6,6 @@ namespace KamyczkiMobile.Views;
 public partial class RegisterPage : ContentPage
 {
     readonly IAuthService _authService;
-	private bool _isChangingPages = false;
 
 	public RegisterPage(IAuthService authService)
 	{
@@ -27,31 +26,22 @@ public partial class RegisterPage : ContentPage
 
         string responseCode = await _authService.RegisterUser(username, email, password);
 
-		if(ResponseCodes.IsErrorCode(responseCode))
-		{
-			await DisplayAlert("UWAGA", "Coś poszło nie tak", "OK");
-			//ErrorMessage.Text = "Coś poszło nie tak";
-            //ErrorMessage.IsVisible = true;
-		}
-		else
-		{
-            await DisplayAlert("UWAGA", "Utworzono nowe konto", "OK");
-            //SuccessMessage.Text = "Utworzono nowe konto";
-			//SuccessMessage.IsVisible = true;
-		}
+        string errorCode = ResponseCodes.IsErrorCode(responseCode);
+
+        if (!string.IsNullOrEmpty(errorCode))
+        {
+            await DisplayAlert("", errorCode, "OK");
+            return;
+        }
+        else
+        {
+            await DisplayAlert("UTWORZONO KONTO", responseCode, "OK");
+            await Shell.Current.GoToAsync("..", true);
+        }
     }
     private async void TapLogin_Tapped(object sender, TappedEventArgs e)
     {
         //flaga zeby nie wyjebalo po spamowaniu
-        if (_isChangingPages) return;
-        try
-        {
-            _isChangingPages = true;
-            await Shell.Current.GoToAsync("..", true);
-        }
-        finally
-        {
-            _isChangingPages = false;
-        }
+        await Shell.Current.GoToAsync("//LoginPage", true);
     }
 }
