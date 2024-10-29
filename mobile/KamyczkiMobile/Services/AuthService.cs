@@ -10,7 +10,6 @@ namespace KamyczkiMobile.Services;
 public class AuthService : IAuthService
 {
     private readonly HttpClient _client;
-    private string _token; //token w pamieci zeby za kazdym razem nie brac ze storage i nie zajechac ajfonika? refresh token(ulu)
     public AuthService(HttpClient client)
     {
         _client = client;
@@ -54,11 +53,10 @@ public class AuthService : IAuthService
 
         if(response.IsSuccessStatusCode)
         {
-            var responseContent = await response.Content.ReadAsStringAsync();
+            string responseContent = await response.Content.ReadAsStringAsync();
             var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
             try
             {
-                _token = loginResponse.token;
                 await SecureStorage.Default.SetAsync("access_token", loginResponse.token);
                 SetAuthorizationHeaderAfterLogin();
             }
@@ -72,6 +70,11 @@ public class AuthService : IAuthService
         else
         {
             var responseContent = await response.Content.ReadAsStringAsync();
+            if (responseContent == null)
+            {
+                responseCode = ResponseCodes.GetNauraCode();
+                return responseCode;
+            }
             var responseDto = JsonConvert.DeserializeObject<ResponseDto>(responseContent);
 
             responseCode = responseDto.code;
@@ -81,28 +84,24 @@ public class AuthService : IAuthService
     }
     public async Task<string> Logout()
     {
-        _token = string.Empty;
         SecureStorage.Default.RemoveAll();
         _client.DefaultRequestHeaders.Authorization = null;
         return "no za brame juz";
     }
-    private void SetAuthorizationHeaderAfterLogin()
+    private async void SetAuthorizationHeaderAfterLogin()
     {
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+        var token = await CheckAndGetToken();
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
     public HttpClient GetHttpClient() => _client;
     public async Task<string> CheckAndGetToken()
     {
-        if (string.IsNullOrEmpty(_token))
+        string _token = await SecureStorage.Default.GetAsync("access_token");
+        if (!string.IsNullOrEmpty(_token))
         {
-            //sprawdzic czy token ze stored¿a valid, tera taki placeholder
-            _token = await SecureStorage.Default.GetAsync("access_token");
+            return _token;
         }
-        else
-        {
-            _token = string.Empty;
-        }
-        return _token;
+        return "";
     }
     public async Task<string> RefreshToken()
     {
@@ -114,7 +113,6 @@ public class AuthService : IAuthService
         {
             Console.WriteLine(ex);
         }
-
         return "test";
     }
 }

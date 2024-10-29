@@ -32,4 +32,10 @@ public static class ResponseCodes
 
         return code;
     }
+    public static string GetNauraCode()
+    {
+        var code = "COS SIE ZJEBALO";
+
+        return code;
+    }
 }

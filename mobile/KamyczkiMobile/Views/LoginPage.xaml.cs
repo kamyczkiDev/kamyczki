@@ -39,7 +39,6 @@ public partial class LoginPage : ContentPage
     {
         //flaga zeby nie wyjebalo po spamowaniu
         if (_isChangingPages) return;
-
         try
         {
             _isChangingPages = true;
