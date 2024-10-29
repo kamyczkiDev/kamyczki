@@ -1,11 +1,28 @@
-﻿namespace KamyczkiMobile;
+﻿using KamyczkiMobile.Services;
+using KamyczkiMobile.Views;
+
+namespace KamyczkiMobile;
 
 public partial class App : Application
 {
-	public App()
+	private readonly IAuthService _authService;
+	public App(IAuthService authService)
 	{
 		InitializeComponent();
-
+		_authService = authService;
+		SetMainPageBasedOnToken();
+    }
+	private async void SetMainPageBasedOnToken()
+	{
 		MainPage = new AppShell();
-	}
+		var token = await _authService.CheckAndGetToken();
+		if(!string.IsNullOrEmpty(token))
+		{
+			await Shell.Current.GoToAsync(nameof(Views.MainPage), false);
+        }
+		else
+		{
+			await Shell.Current.GoToAsync("//"+nameof(LoginPage), false);
+		}
+    }
 }

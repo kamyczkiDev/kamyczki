@@ -13,30 +13,35 @@ public partial class RegisterPage : ContentPage
 
 		 _authService = authService;
 	}
-
 	private void InitializePage()
     {
-		ErrorMessage.IsVisible = false;
-		SuccessMessage.IsVisible = false;
+		//ErrorMessage.IsVisible = false;
+		//SuccessMessage.IsVisible = false;
     }
-
 	private async void OnRegisterClicked(object sender, EventArgs e)
     {
-		string username = UsernameEntry.Text;
-		string email = EmailEntry.Text;
-        string password = PasswordEntry.Text;
+		string username = EntUsername.Text;
+		string email = EntEmail.Text;
+        string password = EntPassword.Text;
 
         string responseCode = await _authService.RegisterUser(username, email, password);
 
-		if(ResponseCodes.IsErrorCode(responseCode))
-		{
-			ErrorMessage.Text = "Coś poszło nie tak";
-            ErrorMessage.IsVisible = true;
-		}
-		else
-		{
-			SuccessMessage.Text = "Utworzono nowe konto";
-			SuccessMessage.IsVisible = true;
-		}
+        string errorCode = ResponseCodes.IsErrorCode(responseCode);
+
+        if (!string.IsNullOrEmpty(errorCode))
+        {
+            await DisplayAlert("", errorCode, "OK");
+            return;
+        }
+        else
+        {
+            await DisplayAlert("UTWORZONO KONTO", responseCode, "OK");
+            await Shell.Current.GoToAsync("..", true);
+        }
+    }
+    private async void TapLogin_Tapped(object sender, TappedEventArgs e)
+    {
+        //flaga zeby nie wyjebalo po spamowaniu
+        await Shell.Current.GoToAsync("//LoginPage", true);
     }
 }

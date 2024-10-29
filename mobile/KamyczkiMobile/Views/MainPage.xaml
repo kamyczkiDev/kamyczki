@@ -8,5 +8,6 @@
             Text="Welcome to kamyczki!"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
+        <Button Text="Wyloguj się" Clicked="Button_Clicked"/>
     </VerticalStackLayout>
 </ContentPage>

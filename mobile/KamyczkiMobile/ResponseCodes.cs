@@ -10,14 +10,18 @@ public static class ResponseCodes
     };
     private static readonly Dictionary<string, string> _errorCodes = new Dictionary<string, string>()
     {
-        {"RESOURCE_ALREADY_EXISTS", "Podana wartość juz istnieje"}
+        {"",""},
+        {"RESOURCE_ALREADY_EXISTS", "Podana wartość juz istnieje"},
+        {"RESOURCE_NOT_FOUND","Nie znaleziono użytkownika"}
     };
-
-    public static bool IsErrorCode(string code)
+    public static string IsErrorCode(string code)
     {
-        return _errorCodes.ContainsKey(code);
+        if(_errorCodes.ContainsKey(code))
+        {
+            return _errorCodes[code];
+        }
+        return string.Empty;
     }
-
     public static string GetSuccessCode()
     {
         var code = "SUCESS_CODE";
@@ -25,6 +29,12 @@ public static class ResponseCodes
         // {
         //     code = value;
         // }
+
+        return code;
+    }
+    public static string GetNauraCode()
+    {
+        var code = "COS SIE ZJEBALO";
 
         return code;
     }
