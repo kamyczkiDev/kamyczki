@@ -33,12 +33,24 @@ public static class MauiProgram
 #elif ANDROID
         //builder.Services.AddSingleton<IDeviceInstallationService, PushNotificationsDemo.Platforms.Android.DeviceInstallationService>();
 #endif
-		builder.Services.AddSingleton(sp =>
+        builder.Services.AddTransient<ProtectedApiBearerTokenHandler>();
+
+        builder.Services.AddHttpClient<AuthService>((httpClient) =>
 		{
-			var httpClient = new HttpClient { BaseAddress = new Uri(Config.BackendServiceEndpoint + Config.AuthControllerUri) };
-			return httpClient;
-		});
-		builder.Services.AddSingleton<IAuthService, AuthService>();
+			httpClient.BaseAddress = new Uri(Config.BackendServiceEndpoint + Config.AuthControllerUri);
+
+        });
+
+        builder.Services.AddHttpClient<IProtectedApiClient, ProtectedApiClient>((httpClient) =>
+        {
+            httpClient.BaseAddress = new Uri(Config.BackendServiceEndpoint);
+			httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+        }).AddHttpMessageHandler<ProtectedApiBearerTokenHandler>();
+
+        builder.Services.AddTransient<IProtectedApiClient, ProtectedApiClient>();
+
+        builder.Services.AddSingleton<IAuthService, AuthService>();
+        builder.Services.AddTransient<IStoneReadService, StoneReadService>();
 
         return builder;
     }
@@ -48,6 +60,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<Views.MainPage>();
 		builder.Services.AddSingleton<RegisterPage>();
 		builder.Services.AddSingleton<LoginPage>();
+
         return builder;
     }
 }
