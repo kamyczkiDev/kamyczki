@@ -2,10 +2,10 @@ name: Java CI
 on:
   push:
     branches:
-      - main
+      - daniel/fix
   pull_request:
     branches:
-      - daniel/fix
+      - main
 
 jobs:
   build:
@@ -37,13 +37,7 @@ jobs:
         run: |
           mvn clean install
           mvn test
-        working-directory: ./server/microservices/auth-service
-
-      - name: Build and test stone-read service
-        run: |
-          mvn clean install
-          mvn test
-        working-directory: ./server/microservices/stone-read
+        working-directory: ./server/microservices/auth/auth-service
       
       - name: Build and test gateway service
         run: |
@@ -56,4 +50,10 @@ jobs:
           mvn clean install
           mvn test
         working-directory: ./server/microservices/stone-write
+        
+        - name: Build and test stone-read service
+        run: |
+          mvn clean install
+          mvn test
+        working-directory: ./server/microservices/stone-read
 
