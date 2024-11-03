@@ -45,15 +45,14 @@ jobs:
           mvn test
         working-directory: ./server/microservices/gateway
 
-        - name: Build and test stone-write service
+      - name: Build and test stone-write service
         run: |
           mvn clean install
           mvn test
         working-directory: ./server/microservices/stone-write
         
-        - name: Build and test stone-read service
+      - name: Build and test stone-read service
         run: |
           mvn clean install
           mvn test
         working-directory: ./server/microservices/stone-read
-
