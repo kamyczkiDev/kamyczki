@@ -5,7 +5,7 @@ on:
       - main
   pull_request:
     branches:
-      - main
+      - daniel/fix
 
 jobs:
   build:
@@ -37,11 +37,28 @@ jobs:
         run: |
           mvn clean install
           mvn test
-        working-directory: ./server/microservices/auth
+        working-directory: ./server/microservices/auth-feign
+
+      - name: Build and test auth service
+        run: |
+          mvn clean install
+          mvn test
+        working-directory: ./server/microservices/auth-service
 
       - name: Build and test gateway service
         run: |
           mvn clean install
           mvn test
+        working-directory: ./server/microservices/stone-read
+      
+      - name: Build and test gateway service
+        run: |
+          mvn clean install
+          mvn test
         working-directory: ./server/microservices/gateway
+        - name: Build and test gateway service
+        run: |
+          mvn clean install
+          mvn test
+        working-directory: ./server/microservices/stone-write
 
