@@ -14,7 +14,6 @@ COPY ./libraries/commons ./commons
 COPY ./microservices/auth/auth-feign ./auth-feign
 
 # Budujemy commons
-RUN chmod +x mvnw ./mvnw
 RUN ./mvnw clean install -f ./commons/pom.xml
 RUN ./mvnw clean install -f ./auth-feign/pom.xml
 

@@ -9,9 +9,11 @@ COPY ./microservices/gateway/pom.xml ./
 COPY ./microservices/gateway/mvnw ./
 COPY ./microservices/gateway/.mvn .mvn
 COPY ./libraries/commons ./commons
+COPY ./microservices/auth/auth-feign ./auth-feign
 
 # Budujemy commons
 RUN ./mvnw clean install -f ./commons/pom.xml
+RUN ./mvnw clean install -f ./auth-feign/pom.xml
 
 # Kopiujemy cały projekt
 COPY ./microservices/gateway/src ./src
