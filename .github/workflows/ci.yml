@@ -33,19 +33,13 @@ jobs:
           mvn test
         working-directory: ./server/microservices/registry
 
-      - name: Build and test auth service
-        run: |
-          mvn clean install
-          mvn test
-        working-directory: ./server/microservices/auth-feign
-
-      - name: Build and test auth service
+      - name: Build and test auth-service service
         run: |
           mvn clean install
           mvn test
         working-directory: ./server/microservices/auth-service
 
-      - name: Build and test gateway service
+      - name: Build and test stone-read service
         run: |
           mvn clean install
           mvn test
@@ -56,7 +50,8 @@ jobs:
           mvn clean install
           mvn test
         working-directory: ./server/microservices/gateway
-        - name: Build and test gateway service
+
+        - name: Build and test stone-write service
         run: |
           mvn clean install
           mvn test
