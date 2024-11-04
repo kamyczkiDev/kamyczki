@@ -7,16 +7,15 @@ LABEL org.opencontainers.image.description DESCRIPTION
 WORKDIR /app
 
 # Kopiujemy plik pom.xml i inne pliki konfiguracyjne Mavena
-COPY ./microservices/auth/pom.xml ./
+COPY ./microservices/auth/auth-service ./
 COPY ./microservices/auth/mvnw ./
 COPY ./microservices/auth/.mvn .mvn
 COPY ./libraries/commons ./commons
+COPY ./microservices/auth/auth-feign ./auth-feign
 
 # Budujemy commons
 RUN ./mvnw clean install -f ./commons/pom.xml
-
-# Kopiujemy cały projekt
-COPY ./microservices/auth/src ./src
+RUN ./mvnw clean install -f ./auth-feign/pom.xml
 
 # Kompilujemy projekt Spring Boot
 RUN ./mvnw clean install -DskipTests
