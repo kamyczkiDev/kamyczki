@@ -18,7 +18,7 @@ public partial class App : Application
 		var token = await _authService.CheckAndGetToken();
 		if(!string.IsNullOrEmpty(token))
 		{
-			await Shell.Current.GoToAsync(nameof(Views.MainPage), false);
+			await Shell.Current.GoToAsync("///MainPage", false);
         }
 		else
 		{

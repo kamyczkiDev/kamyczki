@@ -5,24 +5,30 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:KamyczkiMobile"
     xmlns:views="clr-namespace:KamyczkiMobile.Views"
-    Shell.FlyoutBehavior="Disabled"
-    Shell.FlyoutItemIsVisible="False"
-    Shell.TabBarIsVisible="False"
-    Title="KamyczkiMobile">
-
-    <FlyoutItem Title="Account">
-        <ShellContent
-                Title="Login"
-                ContentTemplate="{DataTemplate views:LoginPage}"
-                Route="LoginPage" />
-        <ShellContent
-                Title="Register"
-                ContentTemplate="{DataTemplate views:RegisterPage}"
-                Route="RegisterPage" />
-    </FlyoutItem>
+    Title="KamyczkiMobile"
+    Shell.TabBarTitleColor="Blue"
+    Shell.TabBarForegroundColor="Blue">
     
     <ShellContent
+            Title="Login"
+            ContentTemplate="{DataTemplate views:LoginPage}"
+            Route="LoginPage" />
+    <ShellContent
+            Title="Register"
+            ContentTemplate="{DataTemplate views:RegisterPage}"
+            Route="RegisterPage" />
+    <!--<ShellContent
         Title="MainPage"
         ContentTemplate="{DataTemplate views:MainPage}"
-        Route="MainPage" />
+        Route="MainPage" />-->
+    <TabBar Route="MainTabPage">
+        <Tab Title="Strona Główna" Route="MainPage" Icon="home_icon" >
+            <ShellContent   Title="MainPage"
+                            ContentTemplate="{DataTemplate views:MainPage}"/>
+        </Tab>
+        <Tab Title="Profil" Route="ProfilePage" Icon="settings_icon" >
+            <ShellContent   Title="Profile"
+                            ContentTemplate="{DataTemplate views:ProfilePage}"/>
+        </Tab>
+    </TabBar>
 </Shell>

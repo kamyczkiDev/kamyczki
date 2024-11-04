@@ -2,12 +2,80 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="KamyczkiMobile.Views.MainPage"
-             Title="MainPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to kamyczki!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-        <Button Text="Wyloguj się" Clicked="Button_Clicked"/>
-    </VerticalStackLayout>
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="LightGray">
+        <ScrollView>
+            <Grid RowSpacing="15" RowDefinitions="Auto,Auto,Auto" >
+                <Frame Grid.Row="1">
+                    <HorizontalStackLayout Spacing="15">
+                        <Image Source="search_icon" Aspect="AspectFill" HeightRequest="15" WidthRequest="15"/>
+                        <Label Text="Search..."/>
+                    </HorizontalStackLayout>
+                </Frame>
+                <VerticalStackLayout Grid.Row="2" Spacing="20" Padding="0" Margin="0">
+                    <Label Text="Ostatnie Kamienie" FontSize="Large" Padding="10"/>
+                <CollectionView x:Name="CvStones">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="20" Orientation="Vertical"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                            <Frame Padding="0" Margin="0">
+                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="0">
+                                        <Grid Grid.Row="0" Padding="10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackLayout Orientation="Horizontal" Grid.Column="0" HorizontalOptions="StartAndExpand">
+                                                <Frame
+                                                       BorderColor="LightGray"
+                                                       CornerRadius="60"
+                                                       HeightRequest="45"
+                                                       WidthRequest="45"
+                                                       IsClippedToBounds="True"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center">
+                                                    <Image Source="dotnet_bot"
+                                                         Aspect="AspectFill"
+                                                         Margin="-20"
+                                                         HeightRequest="50"
+                                                         WidthRequest="50" />
+                                                </Frame>
+                                                <Label Text="{Binding UserName}" VerticalOptions="Center" Margin="5,0,0,0"/>
+                                            </StackLayout>
+                                            <Image  Source="ellipsis_icon" Aspect="AspectFill" HeightRequest="25" WidthRequest="25" 
+                                                    HorizontalOptions="End" VerticalOptions="Center" Grid.Column="1"/>
+                                        </Grid>
+                                        <StackLayout Grid.Row="1" 
+                                                     Margin="-5,0,-5,0"
+                                                     Padding="-5,0,-5,0"
+                                                     IsClippedToBounds="True">
+                                            <Image Source="{Binding ImageUrl}" Aspect="AspectFill"/>
+                                        </StackLayout>
+                                        <StackLayout Grid.Row="2" Margin="10">
+                                            <Label  FontSize="Small" 
+                                                    HorizontalOptions="StartAndExpand"
+                                                    MaxLines="2"
+                                                    LineBreakMode="TailTruncation" 
+                                                    Text="{Binding Description}"/>
+                                            <Label  Padding="0,10,5,0"
+                                                    FontSize="Subtitle"
+                                                    HorizontalOptions="EndAndExpand"
+                                                    TextColor="Black"
+                                                    Text="{Binding Date}"/>
+                                        </StackLayout>
+                                        <HorizontalStackLayout Grid.Row="3" Margin="10" Spacing="20">
+                                            <Image Source="home_icon" Aspect="AspectFill" HeightRequest="30" WidthRequest="30"/>
+                                            <Image Source="settings_icon" Aspect="AspectFill" HeightRequest="30" WidthRequest="30"/>
+                                            <Image Source="home_icon" Aspect="AspectFill" HeightRequest="30" WidthRequest="30"/>
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Grid>
+        </ScrollView>
 </ContentPage>

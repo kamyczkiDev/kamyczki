@@ -32,7 +32,7 @@ public partial class LoginPage : ContentPage
         else
         {
             //await DisplayAlert("DZIALA KURWA", responseCode, "OK");
-            await Shell.Current.GoToAsync("//MainPage",true);
+            await Shell.Current.GoToAsync("///MainPage", false);
         }
     }
     private async void TapRegister_Tapped(object sender, TappedEventArgs e)

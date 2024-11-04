@@ -1,21 +1,32 @@
-using KamyczkiMobile.Services;
+
+using KamyczkiMobile.Models.Stones;
 
 namespace KamyczkiMobile.Views;
 
 public partial class MainPage : ContentPage
 {
-	readonly IAuthService _authService;
-	public MainPage(IAuthService authService)
+	public MainPage()
 	{
 		InitializeComponent();
-		_authService = authService;
+		GenerateStones();
 	}
-	private async void Button_Clicked(object sender, EventArgs e)
+	private void GenerateStones()
 	{
-		var response = await _authService.Logout();
-		if (!string.IsNullOrEmpty(response))
+		List<Stone> stones = new List<Stone>();
+
+		for (int i = 0; i < 5; i++)
 		{
-            await Shell.Current.GoToAsync("//LoginPage", true);
-        }
+			Stone stone = new Stone()
+			{
+				UserName = "Beatka "+i,
+				Date = DateTime.Now.ToShortDateString(),
+				Description = "ale kamyk lasdasdasdasdfasdfionasdfipnewfonweofwefowenoiuweqfoiunewfqnuiofewdquniofwqeounifewquniofwequniofweuniofweqnuiofewnouifewqnouifewounifewuinofewuniowfenuiofwequnio "+i,
+				ImageUrl = "kamyk"+i,
+				TimeStamp = DateTime.Now.ToShortDateString(),
+			};
+			stones.Add(stone);
+		}
+		CvStones.ItemsSource = stones;
     }
+	
 }

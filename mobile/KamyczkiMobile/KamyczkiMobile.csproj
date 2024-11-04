@@ -57,7 +57,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\ellipsis_icon.svg" />
+	  <None Remove="Resources\Images\home_icon.svg" />
+	  <None Remove="Resources\Images\kamyk0.png" />
+	  <None Remove="Resources\Images\kamyk1.PNG" />
+	  <None Remove="Resources\Images\kamyk2.PNG" />
+	  <None Remove="Resources\Images\kamyk3.PNG" />
+	  <None Remove="Resources\Images\kamyk4.PNG" />
 	  <None Remove="Resources\Images\logo.png" />
+	  <None Remove="Resources\Images\paint.png" />
+	  <None Remove="Resources\Images\search_icon.svg" />
+	  <None Remove="Resources\Images\settings_icon.svg" />
+	  <None Remove="Resources\Images\test.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -65,6 +76,12 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\ProfilePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>
