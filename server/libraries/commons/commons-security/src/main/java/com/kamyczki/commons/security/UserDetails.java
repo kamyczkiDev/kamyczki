@@ -2,8 +2,6 @@ package com.kamyczki.commons.security;
 
 public interface UserDetails {
 
-    String getPassword();
-
     String getUsername();
 
     default boolean isAccountNonExpired() {

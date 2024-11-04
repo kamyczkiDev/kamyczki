@@ -43,7 +43,7 @@ class AuthenticationService {
             var userDetails = this.userDetailsService.loadUserByUsername(username);
 
             if (jwtService.isTokenValid(token, userDetails)) {
-                return new UserDetailsImplDto(userDetails.getUsername(),userDetails.getPassword());
+                return new UserDetailsImplDto(userDetails.getUsername());
             }
         }
         throw new ForbiddenException("Could not authenticate token");
