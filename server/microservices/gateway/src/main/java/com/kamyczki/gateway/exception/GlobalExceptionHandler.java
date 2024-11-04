@@ -14,10 +14,10 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @SuppressWarnings("unused")
 @ControllerAdvice
-public class GlobalExceptionHandler {
+class GlobalExceptionHandler {
 
     @ExceptionHandler(FeignException.class)
-    public ResponseEntity<RestError> handleFeignException(FeignException ex) {
+    ResponseEntity<RestError> handleFeignException(FeignException ex) {
         var errorResponse = new RestError(
                 "FEIGN_CLIENT_ERROR",
                 "Feign Error: " + ex.getMessage()
@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpClientErrorException.class)
-    public ResponseEntity<RestError> handleHttpClientError(HttpClientErrorException ex) {
+    ResponseEntity<RestError> handleHttpClientError(HttpClientErrorException ex) {
         var errorResponse = new RestError(
                 "HTTP_CLIENT_ERROR",
                 "Client Error: " + ex.getMessage()
@@ -35,13 +35,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ErrorException.class)
-    public ResponseEntity<RestError> handleErrorException(ErrorException ex, WebRequest request) {
+    ResponseEntity<RestError> handleErrorException(ErrorException ex, WebRequest request) {
         RestError errorResponse = new RestError(ex.getCode(), ex.getMessage());
         return new ResponseEntity<>(errorResponse, ex.getStatusCode());
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<RestError> handleErrorException(Exception ex) {
+    ResponseEntity<RestError> handleErrorException(Exception ex) {
         RestError errorResponse = new RestError("UNEXPECTED_ERROR", ex.getMessage());
         return new ResponseEntity<>(errorResponse, INTERNAL_SERVER_ERROR);
     }

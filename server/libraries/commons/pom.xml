@@ -15,6 +15,7 @@
     <modules>
         <module>commons-error</module>
         <module>commons-stone</module>
+        <module>commons-security</module>
     </modules>
 
 </project>

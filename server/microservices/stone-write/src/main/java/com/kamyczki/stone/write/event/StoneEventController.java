@@ -2,6 +2,7 @@ package com.kamyczki.stone.write.event;
 
 import com.kamyczki.commons.stone.events.StoneEventDto;
 import com.kamyczki.stone.write.event.dto.CreateStoneDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/stone")
 @RequiredArgsConstructor
+@Tag(name = "Stone events")
 class StoneEventController {
 
     private final StoneEventService stoneEventService;

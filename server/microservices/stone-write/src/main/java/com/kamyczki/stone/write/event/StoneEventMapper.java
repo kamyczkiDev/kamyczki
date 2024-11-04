@@ -17,6 +17,8 @@ interface StoneEventMapper {
 
     StoneEventDto toDto(StoneEvent stoneEvent);
 
+    StoneCreatedEventDto toStoneCreatedEventDto(StoneCreatedEvent stoneCreatedEvent);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "stoneId", expression = "java(StoneUtils.newStoneId())")
     @Mapping(target = "timestamp", expression = "java(LocalDateTime.now())")
@@ -25,23 +27,5 @@ interface StoneEventMapper {
 
     default StoneEventType getStoneCreatedType(){
         return StoneEventType.CREATED;
-    }
-
-    default StoneCreatedEventDto toStoneCreatedEventDto(StoneCreatedEvent stoneCreatedEvent) {
-        if ( stoneCreatedEvent == null ) {
-            return null;
-        }
-
-        StoneCreatedEventDto stoneCreatedEventDto = new StoneCreatedEventDto();
-
-        stoneCreatedEventDto.setId( stoneCreatedEvent.getId() );
-        stoneCreatedEventDto.setStoneId( stoneCreatedEvent.getStoneId() );
-        stoneCreatedEventDto.setTimestamp( stoneCreatedEvent.getTimestamp() );
-        stoneCreatedEventDto.setType( stoneCreatedEvent.getType() );
-        stoneCreatedEventDto.setName(stoneCreatedEvent.getName());
-        stoneCreatedEventDto.setDescription(stoneCreatedEvent.getDescription());
-        stoneCreatedEventDto.setZipCode( stoneCreatedEvent.getZipCode());
-
-        return stoneCreatedEventDto;
     }
 }
