@@ -3,7 +3,7 @@ name: Create and publish Docker images
 on:
   push:
     branches:
-      - main
+      - daniel/fix
 
 env:
   REGISTRY: ghcr.io
@@ -33,20 +33,27 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set date as tag
+        id: date_tag
+        run: echo "TAG_DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=${{ matrix.platform }},enable={{is_default_branch}}
+            type=raw,value=${{ matrix.platform }}
+            type=raw,value=${{ env.TAG_DATE }}
 
       - name: Build and push Docker image for ${{ matrix.platform }}
         id: push_image
-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        uses: docker/build-push-action@v4
         with:
           context: ./server
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
-          tags: ghcr.io/isaribi/kamyczki:${{ matrix.platform }}
+          tags: |
+            ghcr.io/isaribi/kamyczki:${{ matrix.platform }}
+            ghcr.io/isaribi/kamyczki:${{ env.TAG_DATE }}  # Użycie tagu z datą
           labels: ${{ steps.meta.outputs.labels }}
