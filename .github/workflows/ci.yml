@@ -59,6 +59,6 @@ jobs:
         
       - name: Build and test stone-read service
         run: |
-          mvn clean install
+          mvn clean install -U
           mvn test
         working-directory: ./server/microservices/stone-read
