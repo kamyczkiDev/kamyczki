@@ -55,5 +55,5 @@ jobs:
           push: true
           tags: |
             ghcr.io/isaribi/kamyczki:${{ matrix.platform }}
-            ghcr.io/isaribi/kamyczki:${{ env.TAG_DATE }}  # Użycie tagu z datą
+            ghcr.io/isaribi/kamyczki:${{ env.TAG_DATE }}
           labels: ${{ steps.meta.outputs.labels }}
