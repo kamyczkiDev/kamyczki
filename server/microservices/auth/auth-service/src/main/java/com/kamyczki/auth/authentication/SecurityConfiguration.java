@@ -32,6 +32,7 @@ class SecurityConfiguration implements WebMvcConfigurer {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/validate-token").permitAll()
                         .anyRequest().authenticated()
                 )
