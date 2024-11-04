@@ -3,7 +3,7 @@ name: Create and publish Docker images
 on:
   push:
     branches:
-      - daniel/fix
+      - main
 
 env:
   REGISTRY: ghcr.io
@@ -33,9 +33,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set date as tag
-        id: date_tag
-        run: echo "TAG_DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
+      - name: Read and increment version
+        id: version
+        run: |
+          if [ -f version.txt ]; then
+            VERSION=$(cat version.txt)
+          else
+            VERSION=0
+          fi
+          NEW_VERSION=$((VERSION + 1))
+          echo "$NEW_VERSION" > version.txt
+          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Commit new version
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add version.txt
+          git commit -m "Bump version to v${{ env.VERSION }}"
+          git push
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -43,8 +59,8 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=${{ matrix.platform }}
-            type=raw,value=${{ env.TAG_DATE }}
+            type=raw,value=v${{ env.VERSION }}
+            type=raw,value=latest
 
       - name: Build and push Docker image for ${{ matrix.platform }}
         id: push_image
@@ -54,6 +70,6 @@ jobs:
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
           tags: |
-            ghcr.io/isaribi/kamyczki:${{ matrix.platform }}
-            ghcr.io/isaribi/kamyczki:${{ env.TAG_DATE }}
+            ghcr.io/${{ env.IMAGE_NAME }}:${{ matrix.platform }}-v${{ env.VERSION }}
+            ghcr.io/${{ env.IMAGE_NAME }}:${{ matrix.platform }}-latest
           labels: ${{ steps.meta.outputs.labels }}
