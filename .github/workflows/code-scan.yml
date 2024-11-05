@@ -13,7 +13,7 @@ jobs:
     env:
       MICROSERVICES_PATH: ./server/microservices
       LIBRARIES_PATH: ./server/libraries
-      LOGS_PATH: ${{ github.workspace }}/logs
+      LOGS_PATH: ${{ github.workspace }}/logs  # Use full path for logs
 
     strategy:
       matrix:
@@ -88,5 +88,5 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v3
       with:
-        name: build-logs-${{ matrix.service // '/' = '-' }}
+        name: build-logs-${{ matrix.service.replace('auth/auth-service', 'auth-auth-service').replace('/', '-') }}
         path: ${{ env.LOGS_PATH }}/*
