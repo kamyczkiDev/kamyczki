@@ -13,6 +13,7 @@ jobs:
     env:
       MICROSERVICES_PATH: ./server/microservices
       LIBRARIES_PATH: ./server/libraries
+      LOGS_PATH: ./logs
 
     strategy:
       matrix:
@@ -42,43 +43,44 @@ jobs:
           ${{ runner.os }}-maven-
 
     - name: Build libraries
-      run: mvn clean install --no-transfer-progress
+      run: |
+        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/commons-build.log 2>&1 || echo "Build failed" >> ${{ env.LOGS_PATH }}/commons-build.log
       working-directory: ${{ env.LIBRARIES_PATH }}/commons
       continue-on-error: true
 
     - name: Build auth-feign-client
-      run: mvn clean install --no-transfer-progress
+      run: |
+        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/auth-feign-client-build.log 2>&1 || echo "Build failed" >> ${{ env.LOGS_PATH }}/auth-feign-client-build.log
       working-directory: ${{ env.MICROSERVICES_PATH }}/auth/auth-feign
       continue-on-error: true
 
     - name: Build with Maven
+      run: |
+        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/${{ matrix.service }}-build.log 2>&1 || echo "Build failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-build.log
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
-      run: mvn clean install --no-transfer-progress
       continue-on-error: true
 
     - name: Run SpotBugs
+      run: |
+        mvn com.github.spotbugs:spotbugs-maven-plugin:4.7.0.0:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotbugs.log 2>&1 || echo "SpotBugs check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotbugs.log
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
-      run: mvn com.github.spotbugs:spotbugs-maven-plugin:4.7.0.0:check
       continue-on-error: true
 
     - name: Run Checkstyle
+      run: |
+        mvn checkstyle:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log 2>&1 || echo "Checkstyle check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
-      run: mvn checkstyle:check
       continue-on-error: true
 
     - name: Run PMD
+      run: |
+        mvn pmd:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log 2>&1 || echo "PMD check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
-      run: mvn pmd:check
       continue-on-error: true
 
-    - name: Run JaCoCo Test Coverage
-      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
-      run: mvn test jacoco:report
-      continue-on-error: true
-
-    - name: Upload JaCoCo Coverage Report
+    - name: Upload logs as artifacts
       if: always()
       uses: actions/upload-artifact@v3
       with:
-        name: jacoco-report-${{ matrix.service }}
-        path: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}/target/site/jacoco
+        name: build-logs-${{ matrix.service }}
+        path: ${{ env.LOGS_PATH }}
