@@ -3,7 +3,7 @@ name: Create and publish Docker images
 on:
   push:
     branches:
-      - main
+      - daniel/images_fix
 
 env:
   REGISTRY: ghcr.io
@@ -48,5 +48,5 @@ jobs:
           context: ./server
           file: ./server/microservices/${{ matrix.platform }}/Dockerfile
           push: true
-          tags: ghcr.io/isaribi/kamyczki:${{ matrix.platform }}
+          tags: ${{ env.REGISTRY }}${{ env.IMAGE_NAME }}:${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
