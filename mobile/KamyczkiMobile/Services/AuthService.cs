@@ -10,11 +10,12 @@ namespace KamyczkiMobile.Services;
 public class AuthService : IAuthService
 {
     private readonly HttpClient _client;
+
     public AuthService(HttpClient client)
     {
         _client = client;
-        _client.DefaultRequestHeaders.Add("Accept", "application/json");
     }
+
     public async Task<string> RegisterUser(string username, string userEmail, string userPassword)
     {
         var responseCode = String.Empty;
@@ -40,6 +41,7 @@ public class AuthService : IAuthService
         
         return responseCode;
     }
+
     public async Task<string> Login(string username, string password)
     {
         var responseCode = String.Empty;
@@ -82,18 +84,20 @@ public class AuthService : IAuthService
 
         return responseCode;
     }
+
     public async Task<string> Logout()
     {
         SecureStorage.Default.RemoveAll();
         _client.DefaultRequestHeaders.Authorization = null;
         return "no za brame juz";
     }
+
     private async void SetAuthorizationHeaderAfterLogin()
     {
         var token = await CheckAndGetToken();
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
-    public HttpClient GetHttpClient() => _client;
+
     public async Task<string> CheckAndGetToken()
     {
         string _token = await SecureStorage.Default.GetAsync("access_token");
@@ -103,6 +107,7 @@ public class AuthService : IAuthService
         }
         return "";
     }
+
     public async Task<string> RefreshToken()
     {
         try
