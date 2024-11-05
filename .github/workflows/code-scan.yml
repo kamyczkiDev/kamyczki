@@ -11,6 +11,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      SERVICES_PATH: Kamyczki/server/microservices
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -31,28 +34,18 @@ jobs:
 
     - name: Build and analyze each microservice
       run: |
-        # Define the path to each microservice
-        for service in Kamyczki/server/microservices/*; do
+        for service in $SERVICES_PATH/*; do
           if [ -f "$service/pom.xml" ]; then
             echo "Running Maven build and analysis for $service"
             cd "$service"
-
-            # Build with Maven
+            
             mvn clean install --no-transfer-progress
-
-            # Run SpotBugs
             mvn com.github.spotbugs:spotbugs-maven-plugin:4.7.0.0:check
-
-            # Run Checkstyle
             mvn checkstyle:check
-
-            # Run PMD
             mvn pmd:check
-
-            # Run JaCoCo Test Coverage
             mvn test jacoco:report
-
-            cd - # Return to root directory
+            
+            cd -
           fi
         done
 
