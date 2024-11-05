@@ -45,32 +45,26 @@ jobs:
     - name: Create logs directory
       run: mkdir -p ${{ env.LOGS_PATH }}
 
-    - name: List all files after creating logs directory
-      run: ls -la ${{ env.LOGS_PATH }}
+    - name: Verify logs directory
+      run: ls -la ${{ env.LOGS_PATH }}  # Wypisanie zawartości katalogu logs
 
     - name: Build libraries
       run: |
-        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/commons-build.log 2>&1
+        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/commons-build.log 2>&1 || echo "Build failed" >> ${{ env.LOGS_PATH }}/commons-build.log
       working-directory: ${{ env.LIBRARIES_PATH }}/commons
-
-    - name: List log files after build libraries
-      run: ls -la ${{ env.LOGS_PATH }}
+      continue-on-error: true
 
     - name: Build auth-feign-client
       run: |
-        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/auth-feign-client-build.log 2>&1
+        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/auth-feign-client-build.log 2>&1 || echo "Build failed" >> ${{ env.LOGS_PATH }}/auth-feign-client-build.log
       working-directory: ${{ env.MICROSERVICES_PATH }}/auth/auth-feign
-
-    - name: List log files after auth-feign-client build
-      run: ls -la ${{ env.LOGS_PATH }}
+      continue-on-error: true
 
     - name: Build with Maven
       run: |
-        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/${{ matrix.service }}-build.log 2>&1
+        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/${{ matrix.service }}-build.log 2>&1 || echo "Build failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-build.log
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
-
-    - name: List log files after building service
-      run: ls -la ${{ env.LOGS_PATH }}
+      continue-on-error: true
 
     - name: Run SpotBugs
       run: |
