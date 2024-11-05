@@ -14,7 +14,7 @@ services:
 
   gateway:
     container_name: gateway
-    image: gateway_test:latest
+    image: ghcr.io/isaribi/kamyczki:gateway
     ports:
       - '8080:8080'
     environment:
