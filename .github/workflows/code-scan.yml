@@ -13,6 +13,7 @@ jobs:
 
     env:
       MICROSERVICES_PATH: ./server/microservices
+      LIBRARIES_PATH: ./server/libraries
 
     strategy:
       matrix:
@@ -40,6 +41,11 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
+
+    - name: Build libraries
+      run: |
+        mvn clean install --no-transfer-progress
+      working-directory: ${{ env.LIBRARIES_PATH }}/commons
 
     - name: Build with Maven
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
