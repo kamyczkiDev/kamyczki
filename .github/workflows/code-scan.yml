@@ -88,5 +88,5 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v3
       with:
-        name: build-logs-${{ matrix.service }}
+        name: build-logs-${{ matrix.service // '/' = '-' }}
         path: ${{ env.LOGS_PATH }}/*
