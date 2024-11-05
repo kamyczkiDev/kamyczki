@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Java code tests
 
 on:
   push:
@@ -46,6 +46,11 @@ jobs:
       run: |
         mvn clean install --no-transfer-progress
       working-directory: ${{ env.LIBRARIES_PATH }}/commons
+
+    - name: Build auth-feign-client
+      run: |
+        mvn clean install --no-transfer-progress
+      working-directory: ${{ env.MICROSERVICES_PATH }}/auth/auth-feign
 
     - name: Build with Maven
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
