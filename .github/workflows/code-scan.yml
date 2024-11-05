@@ -12,11 +12,20 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SERVICES_PATH: Kamyczki/server/microservices
+      MICROSERVICES_PATH: ./server/microservices
+
+    strategy:
+      matrix:
+        service:
+          - auth/auth-service
+          - registry
+          - gateway
+          - stone-read
+          - stone-write
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up JDK 21
       uses: actions/setup-java@v2
@@ -32,26 +41,29 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
 
-    - name: Build and analyze each microservice
-      run: |
-        for service in $SERVICES_PATH/*; do
-          if [ -f "$service/pom.xml" ]; then
-            echo "Running Maven build and analysis for $service"
-            cd "$service"
-            
-            mvn clean install --no-transfer-progress
-            mvn com.github.spotbugs:spotbugs-maven-plugin:4.7.0.0:check
-            mvn checkstyle:check
-            mvn pmd:check
-            mvn test jacoco:report
-            
-            cd -
-          fi
-        done
+    - name: Build with Maven
+      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
+      run: mvn clean install --no-transfer-progress
 
-    - name: Upload JaCoCo Coverage Reports
+    - name: Run SpotBugs
+      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
+      run: mvn com.github.spotbugs:spotbugs-maven-plugin:4.7.0.0:check
+
+    - name: Run Checkstyle
+      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
+      run: mvn checkstyle:check
+
+    - name: Run PMD
+      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
+      run: mvn pmd:check
+
+    - name: Run JaCoCo Test Coverage
+      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
+      run: mvn test jacoco:report
+
+    - name: Upload JaCoCo Coverage Report
       if: always()
       uses: actions/upload-artifact@v3
       with:
-        name: jacoco-reports
-        path: '**/target/site/jacoco'
+        name: jacoco-report-${{ matrix.service }}
+        path: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}/target/site/jacoco
