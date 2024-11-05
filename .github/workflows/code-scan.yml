@@ -31,16 +31,16 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up JDK 21
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
         java-version: '21'
 
     - name: Cache Maven packages
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -52,19 +52,19 @@ jobs:
 
     - name: Build libraries
       run: |
-        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/commons-build.log 2>&1 || (echo "Build failed" >> ${{ env.LOGS_PATH }}/commons-build.log && cat ${{ env.LOGS_PATH }}/commons-build.log)
+        mvn clean install --no-transfer-progress
       working-directory: ${{ env.LIBRARIES_PATH }}/commons
       continue-on-error: true
 
     - name: Build auth-feign-client
       run: |
-        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/auth-feign-client-build.log 2>&1 || (echo "Build failed" >> ${{ env.LOGS_PATH }}/auth-feign-client-build.log && cat ${{ env.LOGS_PATH }}/auth-feign-client-build.log)
+        mvn clean install --no-transfer-progress
       working-directory: ${{ env.MICROSERVICES_PATH }}/auth/auth-feign
       continue-on-error: true
 
     - name: Build with Maven
       run: |
-        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/${{ matrix.service }}-build.log 2>&1 || (echo "Build failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-build.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-build.log)
+        mvn clean install --no-transfer-progress
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
 
