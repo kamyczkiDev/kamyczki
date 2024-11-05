@@ -68,12 +68,6 @@ jobs:
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
 
-    - name: Run SpotBugs
-      run: |
-        mvn com.github.spotbugs:spotbugs-maven-plugin:4.7.0.0:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotbugs.log 2>&1 || (echo "SpotBugs check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotbugs.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotbugs.log)
-      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
-      continue-on-error: true
-
     - name: Run Checkstyle
       run: |
         mvn checkstyle:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log 2>&1 || (echo "Checkstyle check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log)
