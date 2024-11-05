@@ -8,7 +8,6 @@ public interface IAuthService
     Task<string> RegisterUser(string username, string userEmail, string userPassword);
     Task<string> Login(string username, string password);
     Task<string> Logout();
-    HttpClient GetHttpClient();
     Task<string> CheckAndGetToken();
     Task<string> RefreshToken();
 }
