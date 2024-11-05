@@ -6,7 +6,7 @@ include:
 services:
   registry:
     container_name: eureka_registry
-    image: ghcr.io/isaribi/kamyczki:registry
+    image: ghcr.io/kamyczki/kamyczki:registry
     ports:
       - '8761:8761'
     networks:
@@ -14,7 +14,7 @@ services:
 
   gateway:
     container_name: gateway
-    image: ghcr.io/isaribi/kamyczki:gateway
+    image: ghcr.io/kamyczki/kamyczki:gateway
     ports:
       - '8080:8080'
     environment:
@@ -25,7 +25,7 @@ services:
     
   stone-write:
     container_name: stone-write
-    image: ghcr.io/isaribi/kamyczki:stone-write
+    image: ghcr.io/kamyczki/kamyczki:stone-write
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-broker-1:9200,kafka-broker-2:9210,kafka-broker-3:9220
@@ -38,7 +38,7 @@ services:
   
   stone-read:
     container_name: stone-read
-    image: ghcr.io/isaribi/kamyczki:stone-read
+    image: ghcr.io/kamyczki/kamyczki:stone-read
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stonedb:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
@@ -86,7 +86,7 @@ services:
 
   auth:
     container_name: auth
-    image: ghcr.io/isaribi/kamyczki:auth
+    image: ghcr.io/kamyczki/kamyczki:auth
     depends_on:
       - authdb
       - registry
