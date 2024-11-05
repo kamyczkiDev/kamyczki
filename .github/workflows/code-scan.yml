@@ -45,9 +45,6 @@ jobs:
     - name: Create logs directory
       run: mkdir -p ${{ env.LOGS_PATH }}
 
-    - name: Verify logs directory
-      run: ls -la ${{ env.LOGS_PATH }}
-
     - name: Build libraries
       run: |
         mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/commons-build.log 2>&1 || (echo "Build failed" >> ${{ env.LOGS_PATH }}/commons-build.log && cat ${{ env.LOGS_PATH }}/commons-build.log)
@@ -88,5 +85,5 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v3
       with:
-        name: build-logs-${{ matrix.service.replace('auth/auth-service', 'auth-auth-service').replace('/', '-') }}
+        name: build-logs-${{ matrix.service.replace('/', '-') }}  # Replace '/' with '-' for valid artifact name
         path: ${{ env.LOGS_PATH }}/*
