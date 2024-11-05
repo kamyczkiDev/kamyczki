@@ -1,7 +1,7 @@
 version: '3.8'
 
 include:
-- docker-compose-kafka.yml
+  - docker-compose-kafka.yml
 
 services:
   registry:
@@ -40,13 +40,13 @@ services:
     container_name: stone-read
     image: ghcr.io/isaribi/kamyczki:stone-read
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stonedb:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-broker-1:9200,kafka-broker-2:9210,kafka-broker-3:9220
     depends_on:
-      - db
+      - stonedb
       - registry
       - kafka-broker-1
       - kafka-broker-2
@@ -56,8 +56,8 @@ services:
     networks:
       - kamyczki-network
       
-  db:
-    container_name: auth_db
+  authdb:
+    container_name: authdb
     image: postgres:14.1-alpine
     environment:
       - POSTGRES_USER=postgres
@@ -66,7 +66,21 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - db:/var/lib/postgresql/data
+      - authdb:/var/lib/postgresql/data
+    networks:
+      - kamyczki-network
+    
+  stonedb:
+    container_name: stonedb
+    image: postgres:14.1-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - '5433:5432'
+    volumes:
+      - stonedb:/var/lib/postgresql/data
     networks:
       - kamyczki-network
 
@@ -74,10 +88,10 @@ services:
     container_name: auth
     image: ghcr.io/isaribi/kamyczki:auth
     depends_on:
-      - db
+      - authdb
       - registry
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://authdb:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka/
@@ -91,5 +105,7 @@ networks:
     driver: bridge
 
 volumes:
-  db:
+  authdb:
+    driver: local
+  stonedb:
     driver: local
