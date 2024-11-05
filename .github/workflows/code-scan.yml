@@ -1,4 +1,4 @@
-name: Java code tests
+name: Java code tests with logging
 
 on:
   push:
@@ -13,16 +13,21 @@ jobs:
     env:
       MICROSERVICES_PATH: ./server/microservices
       LIBRARIES_PATH: ./server/libraries
-      LOGS_PATH: ${{ github.workspace }}/logs
+      LOG_PATH: ./logs
 
     strategy:
       matrix:
-        service:
-          - auth-service
-          - registry
-          - gateway
-          - stone-read
-          - stone-write
+        include:
+          - service: auth-service
+            path: auth/auth-service
+          - service: registry
+            path: registry
+          - service: gateway
+            path: gateway
+          - service: stone-read
+            path: stone-read
+          - service: stone-write
+            path: stone-write
 
     steps:
     - name: Checkout code
@@ -34,6 +39,10 @@ jobs:
         distribution: 'temurin'
         java-version: '21'
 
+    - name: Create logs directory
+      run: |
+        mkdir -p ${{ env.LOG_PATH }}/${{ matrix.service }}
+        
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
@@ -42,48 +51,45 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
 
-    - name: Create logs directory
-      run: mkdir -p ${{ env.LOGS_PATH }}
-
     - name: Build libraries
       run: |
-        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/commons-build.log 2>&1 || (echo "Build failed" >> ${{ env.LOGS_PATH }}/commons-build.log && cat ${{ env.LOGS_PATH }}/commons-build.log)
+        mvn clean install --no-transfer-progress
       working-directory: ${{ env.LIBRARIES_PATH }}/commons
       continue-on-error: true
 
     - name: Build auth-feign-client
       run: |
-        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/auth-feign-client-build.log 2>&1 || (echo "Build failed" >> ${{ env.LOGS_PATH }}/auth-feign-client-build.log && cat ${{ env.LOGS_PATH }}/auth-feign-client-build.log)
+        mvn clean install --no-transfer-progress
       working-directory: ${{ env.MICROSERVICES_PATH }}/auth/auth-feign
       continue-on-error: true
 
     - name: Build with Maven
+      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       run: |
-        mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/${{ matrix.service }}-build.log 2>&1 || (echo "Build failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-build.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-build.log)
-      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
+        mvn clean install --no-transfer-progress
       continue-on-error: true
 
     - name: Run SpotBugs
+      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       run: |
-        mvn com.github.spotbugs:spotbugs-maven-plugin:4.7.0.0:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotbugs.log 2>&1 || (echo "SpotBugs check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotbugs.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotbugs.log)
-      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
+        mvn com.github.spotbugs:spotbugs-maven-plugin:4.7.0.0:check > ${{ env.LOG_PATH }}/${{ matrix.service }}/spotbugs.log 2>&1
       continue-on-error: true
 
     - name: Run Checkstyle
+      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       run: |
-        mvn checkstyle:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log 2>&1 || (echo "Checkstyle check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log)
-      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
+        mvn checkstyle:check > ${{ env.LOG_PATH }}/${{ matrix.service }}/checkstyle.log 2>&1
       continue-on-error: true
 
     - name: Run PMD
+      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       run: |
-        mvn pmd:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log 2>&1 || (echo "PMD check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log)
-      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.service }}
+        mvn pmd:check > ${{ env.LOG_PATH }}/${{ matrix.service }}/pmd.log 2>&1
       continue-on-error: true
 
-    - name: Upload logs as artifacts
+    - name: Upload build logs
       if: always()
       uses: actions/upload-artifact@v3
       with:
-        name: build-logs-${{ matrix.service }}  # Use the new matrix entry directly
-        path: ${{ env.LOGS_PATH }}/*
+        name: ${{ matrix.service }}-logs
+        path: ${{ env.LOG_PATH }}/${{ matrix.service }}
