@@ -14,11 +14,12 @@ services:
 
   gateway:
     container_name: gateway
-    image: ghcr.io/isaribi/kamyczki:gateway
+    image: gateway_test:latest
     ports:
       - '8080:8080'
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka/
+      - KAMYCZKI_AUTH-SERVICE=auth:8081
     networks:
       - kamyczki-network
     
@@ -69,8 +70,8 @@ services:
     networks:
       - kamyczki-network
 
-  auth_app:
-    container_name: auth_app
+  auth:
+    container_name: auth
     image: ghcr.io/isaribi/kamyczki:auth
     depends_on:
       - db
