@@ -80,9 +80,29 @@ jobs:
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
 
-    - name: Upload logs as artifacts
+    - name: Upload individual logs
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: build-logs-${{ matrix.service }}
+        name: temp-logs-${{ matrix.service }}
         path: ${{ env.LOGS_PATH }}/*
+        retention-days: 1
+
+  combine-logs:
+    needs: build
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Download all workflow run artifacts
+      uses: actions/download-artifact@v4
+      with:
+        pattern: temp-logs-*
+        merge-multiple: true
+        path: all-logs
+
+    - name: Upload combined logs
+      uses: actions/upload-artifact@v4
+      with:
+        name: all-service-logs
+        path: all-logs
