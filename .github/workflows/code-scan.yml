@@ -42,6 +42,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
 
+    - name: Create logs directory
+      run: mkdir -p ${{ env.LOGS_PATH }}
+
     - name: Build libraries
       run: |
         mvn clean install --no-transfer-progress > ${{ env.LOGS_PATH }}/commons-build.log 2>&1 || echo "Build failed" >> ${{ env.LOGS_PATH }}/commons-build.log
@@ -83,4 +86,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: build-logs-${{ matrix.service }}
-        path: ${{ env.LOGS_PATH }}
+        path: ${{ env.LOGS_PATH }}/*
