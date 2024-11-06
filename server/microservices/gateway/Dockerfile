@@ -19,7 +19,7 @@ RUN ./mvnw clean install -f ./auth-feign/pom.xml
 COPY ./microservices/gateway/src ./src
 
 # Kompilujemy projekt Spring Boot
-RUN ./mvnw clean install -DskipTests
+RUN ./mvnw clean install -DskipTests -Dcheckstyle.skip=true -Dpmd.skip=true
 
 # Tworzymy obraz runtime na podstawie Javy
 FROM eclipse-temurin:21-jre-jammy

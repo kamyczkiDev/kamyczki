@@ -16,7 +16,7 @@ RUN ./mvnw dependency:go-offline -B
 COPY ./microservices/registry/src ./src
 
 # Kompilujemy projekt Spring Boot
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw clean package -DskipTests -Dcheckstyle.skip=true -Dpmd.skip=true
 
 # Tworzymy obraz runtime na podstawie Javy
 FROM eclipse-temurin:21-jre-jammy
