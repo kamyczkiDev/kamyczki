@@ -3,7 +3,7 @@ name: Create and publish Docker images
 on:
   push:
     branches:
-      - main
+      - daniel/images_fix
 
 env:
   REGISTRY: ghcr.io
