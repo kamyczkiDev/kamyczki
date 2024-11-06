@@ -18,7 +18,7 @@ RUN ./mvnw clean install -f ./commons/pom.xml
 RUN ./mvnw clean install -f ./auth-feign/pom.xml
 
 # Kompilujemy projekt Spring Boot
-RUN ./mvnw clean install -DskipTests -Dcheckstyle.skip=true -Dpmd.skip=true
+RUN ./mvnw clean install -DskipTests
 
 # Tworzymy obraz runtime na podstawie Javy
 FROM eclipse-temurin:21-jre-jammy
