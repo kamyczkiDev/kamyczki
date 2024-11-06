@@ -1,11 +1,10 @@
-name: Java Code scan
+name: Java code tests
 
 on:
   schedule:
     - cron: '0 22 * * 0'
   push:
-    branches:
-      - main
+    - main
 
 jobs:
   build:
@@ -68,6 +67,7 @@ jobs:
         mvn clean install --no-transfer-progress
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
+
 
     - name: Run Spotless Check
       run: |
