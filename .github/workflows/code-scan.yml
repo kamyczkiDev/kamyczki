@@ -1,9 +1,11 @@
 name: Java Code scan
 
 on:
+  schedule:
+    - cron: '0 22 * * 0'
   push:
     branches:
-      - daniel/images_fix
+      - main
 
 jobs:
   build:
