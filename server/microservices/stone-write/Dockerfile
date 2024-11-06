@@ -22,7 +22,7 @@ RUN ./mvnw clean install -f ./commons/commons-error/pom.xml
 COPY ./microservices/stone-write/src ./src
 
 # Kompilujemy projekt Spring Boot
-RUN ./mvnw clean install -DskipTests
+RUN ./mvnw clean install -DskipTests 
 
 # Tworzymy obraz runtime na podstawie Javy
 FROM eclipse-temurin:21-jre-jammy
