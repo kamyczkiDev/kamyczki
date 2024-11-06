@@ -3,9 +3,8 @@ name: Java code tests
 on:
   schedule:
     - cron: '0 22 * * 0'
-  pull_request:
-    branches:
-      - main
+  push:
+    - main
 
 jobs:
   build:
@@ -69,9 +68,15 @@ jobs:
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
 
-    - name: Run Checkstyle and PMD separately
+
+    - name: Run Spotless Check
       run: |
-        mvn checkstyle:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log 2>&1 || (echo "Checkstyle check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log)
+        mvn spotless:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log 2>&1 || (echo "Spotless check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log)
+      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
+      continue-on-error: true
+
+    - name: Run PMD Check
+      run: |
         mvn pmd:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log 2>&1 || (echo "PMD check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log)
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
