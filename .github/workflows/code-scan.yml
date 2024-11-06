@@ -3,9 +3,9 @@ name: Java code tests
 on:
   schedule:
     - cron: '0 22 * * 0'
-  push:
+  pull_request:
     branches:
-      - daniel/images_fix
+      - main
 
 jobs:
   build:
