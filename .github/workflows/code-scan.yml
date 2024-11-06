@@ -15,6 +15,7 @@ jobs:
       MICROSERVICES_PATH: ./server/microservices
       LIBRARIES_PATH: ./server/libraries
       LOGS_PATH: ${{ github.workspace }}/logs
+      MAVEN_OPTS: "-Dmaven.logging.level=warn"
 
     strategy:
       matrix:
@@ -53,32 +54,31 @@ jobs:
 
     - name: Build libraries
       run: |
-        mvn clean install --no-transfer-progress
+        mvn -q -e clean install --no-transfer-progress
       working-directory: ${{ env.LIBRARIES_PATH }}/commons
       continue-on-error: true
 
     - name: Build auth-feign-client
       run: |
-        mvn clean install --no-transfer-progress
+        mvn -q -e clean install --no-transfer-progress
       working-directory: ${{ env.MICROSERVICES_PATH }}/auth/auth-feign
       continue-on-error: true
 
     - name: Build with Maven
       run: |
-        mvn clean install --no-transfer-progress
+        mvn -q -e clean install --no-transfer-progress
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
 
-
     - name: Run Spotless Check
       run: |
-        mvn spotless:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log 2>&1 || (echo "Spotless check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log)
+        mvn -q -e spotless:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log 2>&1 || (echo "Spotless check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log)
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
 
     - name: Run PMD Check
       run: |
-        mvn pmd:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log 2>&1 || (echo "PMD check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log)
+        mvn -q -e pmd:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log 2>&1 || (echo "PMD check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log)
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
 
