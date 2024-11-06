@@ -1,9 +1,8 @@
 name: Java code tests
 
 on:
-  push:
-    branches:
-      - daniel/images_fix
+  schedule:
+    - cron: '0 22 * * 0'
 
 jobs:
   build:
