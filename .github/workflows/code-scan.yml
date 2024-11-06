@@ -72,13 +72,13 @@ jobs:
 
     - name: Run Spotless Check
       run: |
-        mvn -q -e spotless:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log 2>&1 || (echo "Spotless check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log)
+        mvn spotless:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log 2>&1 || (echo "Spotless check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log)
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
 
     - name: Run PMD Check
       run: |
-        mvn -q -e pmd:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log 2>&1 || (echo "PMD check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log)
+        mvn pmd:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log 2>&1 || (echo "PMD check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log)
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
 
@@ -108,4 +108,3 @@ jobs:
       with:
         name: all-service-logs
         path: all-logs
-        
