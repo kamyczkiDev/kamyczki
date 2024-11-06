@@ -3,6 +3,9 @@ name: Java code tests
 on:
   schedule:
     - cron: '0 22 * * 0'
+  push:
+    branches:
+      - daniel/images_fix
 
 jobs:
   build:
@@ -66,9 +69,10 @@ jobs:
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
 
-    - name: Run Checkstyle and PMD
+    - name: Run Checkstyle and PMD separately
       run: |
-        mvn checkstyle:check pmd:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-code-quality.log 2>&1 || (echo "Checkstyle or PMD check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-code-quality.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-code-quality.log)
+        mvn checkstyle:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log 2>&1 || (echo "Checkstyle check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log)
+        mvn pmd:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log 2>&1 || (echo "PMD check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log)
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
 
