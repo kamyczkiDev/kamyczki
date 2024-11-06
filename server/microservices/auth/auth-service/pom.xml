@@ -226,7 +226,6 @@
                     </java>
                 </configuration>
             </plugin>
-            <!-- skibidi -->
           
             <!-- PMD Plugin -->
             <plugin>
