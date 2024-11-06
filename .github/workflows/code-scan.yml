@@ -1,11 +1,9 @@
-name: Java code tests
+name: Java Code scan
 
 on:
-  schedule:
-    - cron: '0 22 * * 0'
-  pull_request:
+  push:
     branches:
-      - main
+      - daniel/images_fix
 
 jobs:
   build:
@@ -69,9 +67,14 @@ jobs:
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
 
-    - name: Run Checkstyle and PMD separately
+    - name: Run Spotless Check
       run: |
-        mvn checkstyle:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log 2>&1 || (echo "Checkstyle check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-checkstyle.log)
+        mvn spotless:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log 2>&1 || (echo "Spotless check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-spotless.log)
+      working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
+      continue-on-error: true
+
+    - name: Run PMD Check
+      run: |
         mvn pmd:check > ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log 2>&1 || (echo "PMD check failed" >> ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log && cat ${{ env.LOGS_PATH }}/${{ matrix.service }}-pmd.log)
       working-directory: ${{ env.MICROSERVICES_PATH }}/${{ matrix.path }}
       continue-on-error: true
@@ -83,22 +86,3 @@ jobs:
         name: temp-logs-${{ matrix.service }}
         path: ${{ env.LOGS_PATH }}/*
         retention-days: 1
-
-  combine-logs:
-    needs: build
-    runs-on: ubuntu-latest
-    if: always()
-    
-    steps:
-    - name: Download all workflow run artifacts
-      uses: actions/download-artifact@v4
-      with:
-        pattern: temp-logs-*
-        merge-multiple: true
-        path: all-logs
-
-    - name: Upload combined logs
-      uses: actions/upload-artifact@v4
-      with:
-        name: all-service-logs
-        path: all-logs
