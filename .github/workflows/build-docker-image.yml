@@ -94,10 +94,9 @@ jobs:
     if: failure()
     steps:
       - name: Notify on failure
-        if: ${{ needs.check-changes.outputs.services_changed == '[]' && needs.check-changes.outputs.shared_changed != 'true' }}
         run: |
-          echo "Wykryto brak zmian w mikroserwisach, nie przepuszczam workflow dalej."
-      - name: Notify on failure
-        if: ${{ needs.check-changes.outputs.services_changed != '[]' || needs.check-changes.outputs.shared_changed == 'true' }}
-        run: |
-          echo "Wystąpił błąd podczas budowania obrazów."
+          if [[ '${{ needs.check-changes.outputs.services_changed }}' == '[]' && '${{ needs.check-changes.outputs.shared_changed }}' != 'true' ]]; then
+            echo "Wykryto brak zmian w mikroserwisach, nie przepuszczam workflow dalej."
+          else
+            echo "Wystąpił błąd podczas budowania obrazów."
+          fi
