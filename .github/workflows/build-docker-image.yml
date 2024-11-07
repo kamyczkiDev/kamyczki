@@ -37,6 +37,9 @@ jobs:
   build-and-push:
     needs: check-changes
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [gateway, auth, registry, stone-read, stone-write]
     permissions:
       contents: read
       packages: write
