@@ -1,33 +1,32 @@
-name: Build and Publish Docker Images
+name: Create and publish Docker images
 
 on:
   push:
     branches:
       - daniel/compose-fix
 
-permissions:
-  contents: read
-  packages: write
-  id-token: write
-
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-
-  check-changes:
+  build-and-push-image:
     runs-on: ubuntu-latest
-    outputs:
-      shared_changed: ${{ steps.changes.outputs.shared_changed }}
-      services_changed: ${{ steps.changes.outputs.matrix }}
-    
+    strategy:
+      matrix:
+        platform: [gateway, auth, registry, stone-read, stone-write]
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 1
-
-    - name: Create .changes directory
+        
+     - name: Create .changes directory
       run: mkdir -p .changes
     
     - name: Cache changes detection
