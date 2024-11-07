@@ -26,7 +26,7 @@ jobs:
       with:
         fetch-depth: 1
         
-     - name: Create .changes directory
+    - name: Create .changes directory
       run: mkdir -p .changes
     
     - name: Cache changes detection
@@ -40,13 +40,14 @@ jobs:
     - name: Check changes
       id: changes
       run: |
-        if [ -f .changes ]; then
-          cat .changes >> $GITHUB_OUTPUT
+        if [ -f .changes/changes.txt ]; then
+          cat .changes/changes.txt >> $GITHUB_OUTPUT
         else
           SHARED_CHANGED=$(git diff --name-only HEAD^ HEAD | grep -E "server/libraries/|server/microservices/.+/.*-feign/" || true)
           echo "shared_changed=${SHARED_CHANGED:+true}" >> $GITHUB_OUTPUT
           SERVICES=$(git diff --name-only HEAD^ HEAD | grep "server/microservices/" | cut -d'/' -f3 | sort -u | jq -R -s -c 'split("\n")[:-1]')
           echo "matrix=$SERVICES" >> $GITHUB_OUTPUT
+          echo "$SHARED_CHANGED" > .changes/changes.txt
         fi
 
   build-and-push:
