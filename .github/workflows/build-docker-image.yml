@@ -26,41 +26,13 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Create .changes_cache directory
-        run: mkdir -p .changes_cache
-
-      - name: Restore changes cache
-        id: restore-cache
-        uses: actions/cache@v3
-        with:
-          path: .changes_cache
-          key: changes-${{ github.sha }}
-          restore-keys: |
-            changes-
-
       - name: Check changes
         id: changes
         run: |
-          if [ -f .changes_cache/shared_changed ]; then
-            echo "shared_changed=$(cat .changes_cache/shared_changed)" >> $GITHUB_OUTPUT
-            echo "matrix=$(cat .changes_cache/services_changed)" >> $GITHUB_OUTPUT
-          else
-            SHARED_CHANGED=$(git diff --name-only HEAD^ HEAD | grep -E "server/libraries/|server/microservices/.+/.*-feign/" || true)
-            echo "shared_changed=${SHARED_CHANGED:+true}" >> $GITHUB_OUTPUT
-            SERVICES=$(git diff --name-only HEAD^ HEAD | grep "server/microservices/" | cut -d'/' -f3 | sort -u | jq -R -s -c 'split("\n")[:-1]')
-            echo "matrix=$SERVICES" >> $GITHUB_OUTPUT
-
-            mkdir -p .changes_cache
-            echo "${SHARED_CHANGED:+true}" > .changes_cache/shared_changed
-            echo "$SERVICES" > .changes_cache/services_changed
-          fi
-
-      - name: Save changes cache
-        if: steps.restore-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v3
-        with:
-          path: .changes_cache
-          key: changes-${{ github.sha }}
+          SHARED_CHANGED=$(git diff --name-only HEAD^ HEAD | grep -E "server/libraries/|server/microservices/.+/.*-feign/" || true)
+          echo "shared_changed=${SHARED_CHANGED:+true}" >> $GITHUB_OUTPUT
+          SERVICES=$(git diff --name-only HEAD^ HEAD | grep "server/microservices/" | cut -d'/' -f3 | sort -u | jq -R -s -c 'split("\n")[:-1]')
+          echo "matrix=$SERVICES" >> $GITHUB_OUTPUT
 
   build-and-push:
     needs: check-changes
@@ -87,14 +59,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Restore Docker cache
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: buildx-${{ matrix.platform }}-${{ github.sha }}
-          restore-keys: |
-            buildx-${{ matrix.platform }}-
-
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v4
@@ -119,6 +83,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.platform }}:latest
+          cache-to: type=inline
           provenance: false
