@@ -169,7 +169,7 @@
             <artifactId>vavr</artifactId>
             <version>${vavr.version}</version>
         </dependency>
-
+        <!-- nie wiem -->
     </dependencies>
 
     <build>
