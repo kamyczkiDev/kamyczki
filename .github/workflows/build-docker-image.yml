@@ -19,8 +19,7 @@ jobs:
   check-changes:
     runs-on: ubuntu-latest
     outputs:
-      shared_changed: ${{ steps.changes.outputs.shared_changed }}
-      services_changed: ${{ steps.changes.outputs.services_changed }}
+      services_to_build: ${{ steps.changes.outputs.services_to_build }}
     
     steps:
     - uses: actions/checkout@v4
@@ -31,9 +30,12 @@ jobs:
       id: changes
       run: |
         SHARED_CHANGED=$(git diff --name-only HEAD^ HEAD | grep -E "server/libraries/|server/microservices/.+/.*-feign/" || true)
-        echo "shared_changed=${SHARED_CHANGED:+true}" >> $GITHUB_OUTPUT
-        SERVICES=$(git diff --name-only HEAD^ HEAD | grep "server/microservices/" | cut -d'/' -f3 | sort -u)
-        echo "services_changed=$SERVICES" >> $GITHUB_OUTPUT
+        if [ -n "$SHARED_CHANGED" ]; then
+          echo "services_to_build=gateway,auth,registry,stone-read,stone-write" >> $GITHUB_OUTPUT
+        else
+          SERVICES=$(git diff --name-only HEAD^ HEAD | grep "server/microservices/" | cut -d'/' -f3 | sort -u)
+          echo "services_to_build=$SERVICES" >> $GITHUB_OUTPUT
+        fi
 
   build-and-push:
     needs: check-changes
@@ -45,7 +47,7 @@ jobs:
     
     strategy:
       matrix:
-        platform: ${{ toJson(needs.check-changes.outputs.shared_changed == 'true' && ['gateway', 'auth', 'registry', 'stone-read', 'stone-write'] || fromJson(needs.check-changes.outputs.services_changed)) }}
+        platform: ${{ fromJson(needs.check-changes.outputs.services_to_build) }}
     
     steps:
     - uses: actions/checkout@v4
