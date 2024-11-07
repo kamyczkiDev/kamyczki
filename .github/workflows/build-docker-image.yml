@@ -104,13 +104,3 @@ jobs:
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.platform }}:latest
           cache-to: type=inline
           provenance: false
-    
-    if: failure()
-    steps:
-      - name: Notify on failure
-        run: |
-          if [[ '${{ needs.check-changes.outputs.services_changed }}' == '[]' && '${{ needs.check-changes.outputs.shared_changed }}' != 'true' ]]; then
-            echo "Wykryto brak zmian w mikroserwisach, nie przepuszczam workflow dalej."
-          else
-            echo "Wystąpił błąd podczas budowania obrazów."
-          fi
