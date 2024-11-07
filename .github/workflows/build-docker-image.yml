@@ -46,9 +46,23 @@ jobs:
     
     strategy:
       matrix:
-        platform: ${{ fromJSON(needs.check-changes.outputs.services_changed == '[]'
-          ? '["gateway", "auth", "registry", "stone-read", "stone-write"]' 
-          : needs.check-changes.outputs.services_changed) }}
+        include:
+          - platform: gateway
+          - platform: auth
+          - platform: registry
+          - platform: stone-read
+          - platform: stone-write
+        exclude:
+          - platform: gateway
+            if: needs.check-changes.outputs.services_changed == '[]' && needs.check-changes.outputs.shared_changed != 'true'
+          - platform: auth
+            if: needs.check-changes.outputs.services_changed == '[]' && needs.check-changes.outputs.shared_changed != 'true'
+          - platform: registry
+            if: needs.check-changes.outputs.services_changed == '[]' && needs.check-changes.outputs.shared_changed != 'true'
+          - platform: stone-read
+            if: needs.check-changes.outputs.services_changed == '[]' && needs.check-changes.outputs.shared_changed != 'true'
+          - platform: stone-write
+            if: needs.check-changes.outputs.services_changed == '[]' && needs.check-changes.outputs.shared_changed != 'true'
     
     steps:
       - uses: actions/checkout@v4
